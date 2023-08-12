@@ -6,7 +6,14 @@ const contenido = document.querySelector('.pb-5.container')
 
 function showData(dataArray) {
     for (const item of dataArray) {
-        contenido.innerHTML += `<p> ${item.name} ${item.description} ${item.cost} ${item.currency} ${item.soldCount} </p>`;
+        contenido.innerHTML +=
+            `<div class="product">
+            <p>${item.name}</p>
+            <p>${item.description}</p>
+            <p>${item.cost} ${item.currency}</p>
+            <p>Sold: ${item.soldCount}</p>
+            <img src="${item.image}" alt="Imagen del producto">
+            </div>`;
     }
 }
 
