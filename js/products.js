@@ -22,11 +22,15 @@ function showData(dataArray){
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const storedCatID = localStorage.getItem("catID");
-    const DATA_URL = `https://japceibal.github.io/emercado-api/cats_products/${storedCatID}.json`;
-    fetch(DATA_URL)
-        .then(response => response.json())
-        .then(data => showData(data.products))
-        .catch(error => console.error("Error fetching data:", error));
-});
+if(sessionStorage.getItem("signedIn") !== "true")
+    window.location.href = "login.html";
+else{
+    document.addEventListener("DOMContentLoaded", () => {
+        const storedCatID = localStorage.getItem("catID");
+        const DATA_URL = `https://japceibal.github.io/emercado-api/cats_products/${storedCatID}.json`;
+        fetch(DATA_URL)
+            .then(response => response.json())
+            .then(data => showData(data.products))
+            .catch(error => console.error("Error fetching data:", error));
+    });
+}
