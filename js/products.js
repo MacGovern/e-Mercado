@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("catID not found in local storage");
     }
 
-    const DATA_URL = 'https://japceibal.github.io/emercado-api/cats_products/${storedCatID}.json';
+    const DATA_URL = `https://japceibal.github.io/emercado-api/cats_products/${storedCatID}.json`;
 
     fetch(DATA_URL)
         .then(response => response.json())
