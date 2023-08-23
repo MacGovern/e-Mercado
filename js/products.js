@@ -1,4 +1,4 @@
-const contenido = document.querySelector('.pb-5.container');
+const contenido = document.querySelector('#products');
 
 function showData(dataArray){
     contenido.innerHTML = "";
