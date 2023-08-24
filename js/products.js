@@ -1,4 +1,6 @@
 const contenido = document.querySelector('#products');
+const searchBar = document.querySelector('#searchBar');
+const btnClearSearch = document.querySelector('#clearSearchFilter');
 
 function showData(dataArray){
     contenido.innerHTML = "";
@@ -22,15 +24,39 @@ function showData(dataArray){
     }
 }
 
-if(sessionStorage.getItem("signedIn") !== "true")
+function removeDiacritics(str){
+    return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+}
+
+if (sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
-else{
+else {
+    searchBar.value = '';
     document.addEventListener("DOMContentLoaded", () => {
         const storedCatID = localStorage.getItem("catID");
         const DATA_URL = `https://japceibal.github.io/emercado-api/cats_products/${storedCatID}.json`;
         fetch(DATA_URL)
-            .then(response => response.json())
-            .then(data => showData(data.products))
+            .then((response) => response.json())
+            .then((data) => {
+                let productsArray = data.products;
+                showData(productsArray);
+                searchBar.addEventListener('input', (e) => {
+                    const searchInput = removeDiacritics(e.target.value).toLowerCase();
+                    let productsFiltered = productsArray.filter((product) => {
+                        const productName = removeDiacritics(product.name).toLowerCase();
+                        const productDescription = removeDiacritics(product.description).toLowerCase();
+                        return productName.includes(searchInput) || productDescription.includes(searchInput);
+                    });
+                    if (searchBar.value === '')
+                        showData(productsArray);
+                    else
+                        showData(productsFiltered);
+                });
+                btnClearSearch.addEventListener('click', () => {
+                    searchBar.value = '';
+                    showData(productsArray);
+                });
+            })
             .catch(error => console.error("Error fetching data:", error));
     });
 }
