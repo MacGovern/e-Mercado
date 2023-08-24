@@ -1,5 +1,3 @@
-localStorage.setItem('email', 'prueba');
-
 const ORDER_ASC_BY_NAME = "AZ";
 const ORDER_DESC_BY_NAME = "ZA";
 const ORDER_BY_PROD_COUNT = "Cant.";
