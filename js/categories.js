@@ -1,3 +1,5 @@
+localStorage.setItem('email', 'prueba');
+
 const ORDER_ASC_BY_NAME = "AZ";
 const ORDER_DESC_BY_NAME = "ZA";
 const ORDER_BY_PROD_COUNT = "Cant.";
@@ -152,5 +154,5 @@ window.addEventListener("load", () => {
   let nav = document.querySelector("nav.navbar");
   let navItems = nav.getElementsByClassName("nav-item");
   let ultimoNav = navItems[navItems.length - 1];
-  ultimoNav.textContent = email;
+  ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
 });

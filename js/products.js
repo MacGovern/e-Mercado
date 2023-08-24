@@ -38,6 +38,7 @@ else {
         fetch(DATA_URL)
             .then((response) => response.json())
             .then((data) => {
+                document.querySelector('#catName').textContent = data.catName;
                 let productsArray = data.products;
                 showData(productsArray);
                 searchBar.addEventListener('input', (e) => {
@@ -66,5 +67,5 @@ window.addEventListener("load", () => {
   let nav = document.querySelector("nav.navbar");
   let navItems = nav.getElementsByClassName("nav-item");
   let ultimoNav = navItems[navItems.length - 1];
-  ultimoNav.textContent = email;
+  ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
 });

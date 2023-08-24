@@ -6,5 +6,5 @@ window.addEventListener("load", () => {
   let nav = document.querySelector("nav.navbar");
   let navItems = nav.getElementsByClassName("nav-item");
   let ultimoNav = navItems[navItems.length - 1];
-  ultimoNav.textContent = email;
+  ultimoNav.innerHTML = `<a class="nav-link active" href="my-profile.html">${email}</a>`;
 });
