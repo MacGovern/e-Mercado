@@ -5,8 +5,13 @@ const btnRangePriceFilter = document.getElementById("rangeFilterCount");
 const btnClearPriceFilter = document.getElementById("clearRangeFilter");
 const minPriceInput = document.getElementById("rangeFilterCountMin");
 const maxPriceInput = document.getElementById("rangeFilterCountMax");
+const sortingBtns = document.querySelector('#sortingBtns');
 
 let productsFilteredByPrice = [];
+let productsFilteredByText;
+let productsFilteredByBoth;
+
+let sortingBtn = 'sortByRelevance';
 
 function showData(dataArray) {
   contenido.innerHTML = '';
@@ -59,6 +64,19 @@ function filterByPrice(array, minPrice, maxPrice) {
   }
 }
 
+function applySorting(array, sortFunction) {
+  switch (sortFunction) {
+    case 'sortDescByCost':
+      array.sort((a, b) => b.cost - a.cost);
+      break;
+    case 'sortAscByCost':
+      array.sort((a, b) => a.cost - b.cost);
+      break;
+    case 'sortByRelevance':
+      array.sort((a, b) => b.soldCount - a.soldCount);
+  }
+}
+
 if (sessionStorage.getItem('signedIn') !== 'true')
   window.location.href = 'login.html';
 else {
@@ -70,34 +88,92 @@ else {
       .then((response) => response.json())
       .then((data) => {
         document.querySelector('#catName').textContent = data.catName;
-        let productsArray = data.products;
+        let productsArray = data.products.sort((a, b) => b.soldCount - a.soldCount);
         showData(productsArray);
+
+        function sortAndShowData(sortingBtn) {
+          if (searchBar.value === '') {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+              applySorting(productsArray, sortingBtn);
+              showData(productsArray);
+            } else {
+              applySorting(productsFilteredByPrice, sortingBtn);
+              showData(productsFilteredByPrice);
+            }
+          } else {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+              applySorting(productsFilteredByText, sortingBtn);
+              showData(productsFilteredByText);
+            } else {
+              applySorting(productsFilteredByBoth, sortingBtn);
+              showData(productsFilteredByBoth);
+            }
+          }
+        }
+
+        sortingBtns.addEventListener('click', (e) => {
+          if (e.target.tagName === 'INPUT') {
+            sortingBtn = e.target.getAttribute('id');
+            const elementArray = Array.from(e.target.parentElement.children);
+
+            function darkToLight() {
+              elementArray.forEach(element => {
+                element.classList.replace('btn-dark', 'btn-light');
+              });
+            }
+
+            switch (sortingBtn) {
+              case 'sortDescByCost':
+                darkToLight();
+                elementArray[1].classList.replace('btn-light', 'btn-dark');
+                sortAndShowData(sortingBtn);
+                break;
+              case 'sortAscByCost':
+                darkToLight();
+                elementArray[3].classList.replace('btn-light', 'btn-dark');
+                sortAndShowData(sortingBtn);
+                break;
+              case 'sortByRelevance':
+                darkToLight();
+                elementArray[5].classList.replace('btn-light', 'btn-dark');
+                sortAndShowData(sortingBtn);
+            }
+          }
+        })
 
         searchBar.addEventListener('input', (e) => {
           const searchInput = e.target.value;
           if (searchInput === '') {
-            if (productsFilteredByPrice.length === 0)
+            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+              applySorting(productsArray, sortingBtn);
               showData(productsArray);
-            else {
+            } else {
               productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
+              applySorting(productsFilteredByPrice, sortingBtn);
               showData(productsFilteredByPrice);
             }
           } else {
-            if (productsFilteredByPrice.length === 0)
-              showData(filterByText(productsArray, searchInput));
-            else {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+              productsFilteredByText = filterByText(productsArray, searchInput);
+              applySorting(productsFilteredByText, sortingBtn);
+              showData(productsFilteredByText);
+            } else {
               productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
-              showData(filterByText(productsFilteredByPrice, searchInput));
+              productsFilteredByBoth = filterByText(productsFilteredByPrice, searchInput);
+              applySorting(productsFilteredByBoth, sortingBtn);
+              showData(productsFilteredByBoth);
             }
           }
         });
 
         btnClearSearch.addEventListener('click', () => {
           searchBar.value = '';
-          if (productsFilteredByPrice.length === 0)
+          if (minPriceInput.value === '' && maxPriceInput.value === '') {
+            applySorting(productsArray, sortingBtn);
             showData(productsArray);
-          else {
+          } else {
             productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
+            applySorting(productsFilteredByPrice, sortingBtn);
             showData(productsFilteredByPrice);
           }
         });
@@ -109,10 +185,13 @@ else {
             alert('Por favor ingrese valores válidos.');
           else if (searchBar.value === '') {
             productsFilteredByPrice = filterByPrice(productsArray, minPrice, maxPrice);
+            applySorting(productsFilteredByPrice, sortingBtn);
             showData(productsFilteredByPrice);
           } else {
-            productsFilteredByPrice = filterByPrice(filterByText(productsArray, searchBar.value), minPrice, maxPrice);
-            showData(productsFilteredByPrice);
+            productsFilteredByPrice = filterByPrice(productsArray, minPrice, maxPrice);
+            productsFilteredByBoth = filterByText(productsFilteredByPrice, searchBar.value);
+            applySorting(productsFilteredByBoth, sortingBtn);
+            showData(productsFilteredByBoth);
           }
         });
 
@@ -120,10 +199,14 @@ else {
           minPriceInput.value = '';
           maxPriceInput.value = '';
           productsFilteredByPrice = [];
-          if (searchBar.value === '')
+          if (searchBar.value === '') {
+            applySorting(productsArray, sortingBtn);
             showData(productsArray);
-          else
-            showData(filterByText(productsArray, searchBar.value));
+          } else {
+            productsFilteredByText = filterByText(productsArray, searchBar.value)
+            applySorting(productsFilteredByText, sortingBtn);
+            showData(productsFilteredByText);
+          }
         });
 
       })
