@@ -74,9 +74,9 @@ function applySorting(array, sortFunction) {
   }
 }
 
-if (sessionStorage.getItem('signedIn') !== 'true') // En caso de que el usuario no este logueado, te redirige a login.html.
+if (sessionStorage.getItem('signedIn') !== 'true') // En caso de que el usuario no esté logueado, te redirige a login.html.
   window.location.href = 'login.html';
-else { // Si el usuario esta logueado, hace lo siguiente:
+else { // Si el usuario está logueado, hace lo siguiente:
 
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.navbar-nav').lastElementChild.innerHTML = `<a class="nav-link" href="my-profile.html">${localStorage.getItem("email")}</a>`; // Agrega a la barra de navegación una manera de acceder al perfil del usuario.
@@ -85,7 +85,7 @@ else { // Si el usuario esta logueado, hace lo siguiente:
       .then((response) => response.json())
       .then((data) => {
 
-        document.getElementById('catName').textContent = data.catName; // "Verás aquí todos los productos de la categoría ${categoria_seleccionada}".
+        document.getElementById('catName').textContent = data.catName; // "Verás aquí todos los productos de la categoría ${categoría_seleccionada}".
 
         const productsArray = data.products.sort((a, b) => b.soldCount - a.soldCount); // Productos ordenados por relevancia.
         showData(productsArray);
