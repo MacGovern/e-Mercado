@@ -1,19 +1,16 @@
-const contenido = document.querySelector('#products');
-const searchBar = document.querySelector('#searchBar');
-const btnClearSearch = document.querySelector('#clearSearchFilter');
-const btnRangePriceFilter = document.getElementById("rangeFilterCount");
-const btnClearPriceFilter = document.getElementById("clearRangeFilter");
-const minPriceInput = document.getElementById("rangeFilterCountMin");
-const maxPriceInput = document.getElementById("rangeFilterCountMax");
-const sortingBtns = document.querySelector('#sortingBtns');
+const contenido = document.getElementById('products'); // Aquí es donde se insertan los list group items (https://getbootstrap.com/docs/5.3/components/list-group/) correspondientes a los productos de la categoría seleccionada.
+const searchBar = document.getElementById('searchBar'); // Barra de búsqueda donde el usuario puede filtrar productos por texto (título y descripción de los productos) en tiempo real.
+// Inputs donde el usuario puede filtrar productos por rango de precio al apretar el botón de filtrar.
+const minPriceInput = document.getElementById("rangeFilterMin");
+const maxPriceInput = document.getElementById("rangeFilterMax");
 
-let productsFilteredByPrice = [];
+let productsFilteredByPrice;
 let productsFilteredByText;
 let productsFilteredByBoth;
 
-let sortingBtn = 'sortByRelevance';
+let sortingBtn = 'sortByRelevance'; // Sort seleccionado cuando el usuario hace clic en cualquiera de los botones de sort. Inicializado con un sort por relevancia (cantidad de productos vendidos), de mayor a menor.
 
-function showData(dataArray) {
+function showData(dataArray) { // Inserta en "contenido" los productos que se le pasan por parámetro (dataArray).
   contenido.innerHTML = '';
   for (const item of dataArray) {
     contenido.innerHTML += `
@@ -35,7 +32,7 @@ function showData(dataArray) {
   }
 }
 
-function removeDiacritics(str) {
+function removeDiacritics(str) { // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript (primera respuesta).
   return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
@@ -49,15 +46,15 @@ function filterByText(array, text) {
 }
 
 function filterByPrice(array, minPrice, maxPrice) {
-  if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+  if (!isNaN(minPrice) && !isNaN(maxPrice)) { // Caso 1: El usario filtra habiendo establecido un mínimo y un máximo.
     return array.filter((product) => {
       return product.cost >= minPrice && product.cost <= maxPrice;
     });
-  } else if (!isNaN(maxPrice)) {
+  } else if (!isNaN(maxPrice)) { // Caso 2: El usario filtra habiendo establecido un máximo.
     return array.filter((product) => {
       return product.cost <= maxPrice;
     });
-  } else {
+  } else { // Caso 3: El usario filtra habiendo establecido un mínimo.
     return array.filter((product) => {
       return product.cost >= minPrice;
     });
@@ -77,46 +74,48 @@ function applySorting(array, sortFunction) {
   }
 }
 
-if (sessionStorage.getItem('signedIn') !== 'true')
+if (sessionStorage.getItem('signedIn') !== 'true') // En caso de que el usuario no este logueado, te redirige a login.html.
   window.location.href = 'login.html';
-else {
-  searchBar.value = '';
+else { // Si el usuario esta logueado, hace lo siguiente:
+
   document.addEventListener('DOMContentLoaded', () => {
-    const storedCatID = localStorage.getItem("catID");
-    const DATA_URL = `https://japceibal.github.io/emercado-api/cats_products/${storedCatID}.json`;
-    fetch(DATA_URL)
+    document.querySelector('.navbar-nav').lastElementChild.innerHTML = `<a class="nav-link" href="my-profile.html">${localStorage.getItem("email")}</a>`; // Agrega a la barra de navegación una manera de acceder al perfil del usuario.
+    searchBar.value = '';
+    fetch(`https://japceibal.github.io/emercado-api/cats_products/${localStorage.getItem("catID")}.json`)
       .then((response) => response.json())
       .then((data) => {
-        document.querySelector('#catName').textContent = data.catName;
-        let productsArray = data.products.sort((a, b) => b.soldCount - a.soldCount);
+
+        document.getElementById('catName').textContent = data.catName; // "Verás aquí todos los productos de la categoría ${categoria_seleccionada}".
+
+        const productsArray = data.products.sort((a, b) => b.soldCount - a.soldCount); // Productos ordenados por relevancia.
         showData(productsArray);
 
         function sortAndShowData(sortingBtn) {
           if (searchBar.value === '') {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 1: Ningún filtro activo.
               applySorting(productsArray, sortingBtn);
               showData(productsArray);
-            } else {
+            } else { // Caso 2: Filtro por precio activo.
               applySorting(productsFilteredByPrice, sortingBtn);
               showData(productsFilteredByPrice);
             }
           } else {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 3: Filtro de búsqueda por texto activo.
               applySorting(productsFilteredByText, sortingBtn);
               showData(productsFilteredByText);
-            } else {
+            } else { // Caso 4: Ambos filtros activos.
               applySorting(productsFilteredByBoth, sortingBtn);
               showData(productsFilteredByBoth);
             }
           }
         }
 
-        sortingBtns.addEventListener('click', (e) => {
-          if (e.target.tagName === 'INPUT') {
+        document.getElementById('sortingBtns').addEventListener('click', (e) => { // Cuando el usuario hace clic en cualquiera de los botones de sort.
+          if (e.target.tagName === 'INPUT') { // Dado que hay varios elementos HTML superpuestos, cuando el usuario hace clic, técnicamente está cliqueando múltiples elementos, por lo que nos quedamos sólo con el input, pues este es el que contiene en su atributo id el tipo de sort que se aplicará.
             sortingBtn = e.target.getAttribute('id');
-            const elementArray = Array.from(e.target.parentElement.children);
+            const elementArray = Array.from(e.target.parentElement.children); // Arreglo que contiene todos los elementos HTML que se encuentran dentro del div que engloba a los botones de sort (inputs y labels).
 
-            function darkToLight() {
+            function darkToLight() { // Para cada elemento del arreglo elementArray, si tiene la clase btn-dark, la remplaza por la clase btn-light. btn-dark lo utilizamos como indicador visual para mostrar cuál de los botones de sort está seleccionado. En otras palabras, esta función deselecciona el botón de sort seleccionado.
               elementArray.forEach(element => {
                 element.classList.replace('btn-dark', 'btn-light');
               });
@@ -125,17 +124,17 @@ else {
             switch (sortingBtn) {
               case 'sortDescByCost':
                 darkToLight();
-                elementArray[1].classList.replace('btn-light', 'btn-dark');
+                elementArray[1].classList.replace('btn-light', 'btn-dark'); // Marca el botón de sort "sortDescByCost" como seleccionado.
                 sortAndShowData(sortingBtn);
                 break;
               case 'sortAscByCost':
                 darkToLight();
-                elementArray[3].classList.replace('btn-light', 'btn-dark');
+                elementArray[3].classList.replace('btn-light', 'btn-dark'); // Marca el botón de sort "sortAscByCost" como seleccionado.
                 sortAndShowData(sortingBtn);
                 break;
               case 'sortByRelevance':
                 darkToLight();
-                elementArray[5].classList.replace('btn-light', 'btn-dark');
+                elementArray[5].classList.replace('btn-light', 'btn-dark'); // Marca el botón de sort "sortByRelevance" como seleccionado.
                 sortAndShowData(sortingBtn);
             }
           }
@@ -144,80 +143,67 @@ else {
         searchBar.addEventListener('input', (e) => {
           const searchInput = e.target.value;
           if (searchInput === '') {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 1: Ningún filtro activo.
               applySorting(productsArray, sortingBtn);
               showData(productsArray);
-            } else {
+            } else { // Caso 2: Filtro por precio activo.
               productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
               applySorting(productsFilteredByPrice, sortingBtn);
               showData(productsFilteredByPrice);
             }
           } else {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') {
+            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 3: Filtro de búsqueda por texto activo.
               productsFilteredByText = filterByText(productsArray, searchInput);
               applySorting(productsFilteredByText, sortingBtn);
               showData(productsFilteredByText);
-            } else {
-              productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
-              productsFilteredByBoth = filterByText(productsFilteredByPrice, searchInput);
+            } else { // Caso 4: Ambos filtros activos.
+              productsFilteredByText = filterByText(productsArray, searchInput);
+              productsFilteredByBoth = filterByPrice(productsFilteredByText, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
               applySorting(productsFilteredByBoth, sortingBtn);
               showData(productsFilteredByBoth);
             }
           }
         });
 
-        btnClearSearch.addEventListener('click', () => {
+        document.getElementById('clearSearchFilterBtn').addEventListener('click', () => {
           searchBar.value = '';
-          if (minPriceInput.value === '' && maxPriceInput.value === '') {
+          if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 1: Filtro por precio no activo.
             applySorting(productsArray, sortingBtn);
             showData(productsArray);
-          } else {
+          } else { // Caso 2: Filtro por precio activo.
             productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
             applySorting(productsFilteredByPrice, sortingBtn);
             showData(productsFilteredByPrice);
           }
         });
 
-        btnRangePriceFilter.addEventListener('click', () => {
+        document.getElementById("rangeFilterBtn").addEventListener('click', () => {
           const minPrice = minPriceInput.valueAsNumber;
           const maxPrice = maxPriceInput.valueAsNumber;
-          if ((isNaN(minPrice) || minPrice < 0) && (isNaN(maxPrice) || maxPrice < 0))
+          if ((isNaN(minPrice) || minPrice < 0) && (isNaN(maxPrice) || maxPrice < 0)) // Validación de datos ingresados.
             alert('Por favor ingrese valores válidos.');
-          else if (searchBar.value === '') {
+          else if (searchBar.value === '') { // Caso 1: Filtro de búsqueda por texto no activo.
             productsFilteredByPrice = filterByPrice(productsArray, minPrice, maxPrice);
             applySorting(productsFilteredByPrice, sortingBtn);
             showData(productsFilteredByPrice);
-          } else {
-            productsFilteredByPrice = filterByPrice(productsArray, minPrice, maxPrice);
-            productsFilteredByBoth = filterByText(productsFilteredByPrice, searchBar.value);
+          } else { // Caso 2: Filtro de búsqueda por texto activo.
+            productsFilteredByBoth = filterByPrice(productsFilteredByText, minPrice, maxPrice);
             applySorting(productsFilteredByBoth, sortingBtn);
             showData(productsFilteredByBoth);
           }
         });
 
-        btnClearPriceFilter.addEventListener('click', () => {
+        document.getElementById("clearRangeFilterBtn").addEventListener('click', () => {
           minPriceInput.value = '';
           maxPriceInput.value = '';
-          productsFilteredByPrice = [];
-          if (searchBar.value === '') {
+          if (searchBar.value === '') { // Caso 1: Filtro de búsqueda por texto no activo. 
             applySorting(productsArray, sortingBtn);
             showData(productsArray);
-          } else {
-            productsFilteredByText = filterByText(productsArray, searchBar.value)
-            applySorting(productsFilteredByText, sortingBtn);
+          } else // Caso 2: Filtro de búsqueda por texto activo.
             showData(productsFilteredByText);
-          }
         });
 
       })
       .catch(error => console.error('Error fetching data:', error));
   });
 }
-
-window.addEventListener("load", () => {
-  let email = localStorage.getItem("email");
-  let nav = document.querySelector("nav.navbar");
-  let navItems = nav.getElementsByClassName("nav-item");
-  let ultimoNav = navItems[navItems.length - 1];
-  ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
-});
