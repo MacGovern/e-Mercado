@@ -1,5 +1,6 @@
 const contenido = document.getElementById('products'); // Aquí es donde se insertan los list group items (https://getbootstrap.com/docs/5.3/components/list-group/) correspondientes a los productos de la categoría seleccionada.
 const searchBar = document.getElementById('searchBar'); // Barra de búsqueda donde el usuario puede filtrar productos por texto (título y descripción de los productos) en tiempo real.
+const sortingBtns = document.getElementById('sortingBtns'); // div que engloba a los botones de sort (inputs y labels).
 // Inputs donde el usuario puede filtrar productos por rango de precio al apretar el botón de filtrar.
 const minPriceInput = document.getElementById("rangeFilterMin");
 const maxPriceInput = document.getElementById("rangeFilterMax");
@@ -110,10 +111,10 @@ else { // Si el usuario está logueado, hace lo siguiente:
           }
         }
 
-        document.getElementById('sortingBtns').addEventListener('click', (e) => { // Cuando el usuario hace clic en cualquiera de los botones de sort.
+        sortingBtns.addEventListener('click', (e) => { // Cuando el usuario hace clic en cualquiera de los botones de sort.
           if (e.target.tagName === 'INPUT') { // Dado que hay varios elementos HTML superpuestos, cuando el usuario hace clic, técnicamente está cliqueando múltiples elementos, por lo que nos quedamos sólo con el input, pues este es el que contiene en su atributo id el tipo de sort que se aplicará.
             sortingBtn = e.target.getAttribute('id');
-            const elementArray = Array.from(e.target.parentElement.children); // Arreglo que contiene todos los elementos HTML que se encuentran dentro del div que engloba a los botones de sort (inputs y labels).
+            const elementArray = Array.from(sortingBtns.children); // Arreglo que contiene todos los elementos HTML que se encuentran dentro "sortingBtns".
 
             function darkToLight() { // Para cada elemento del arreglo elementArray, si tiene la clase btn-dark, la remplaza por la clase btn-light. btn-dark lo utilizamos como indicador visual para mostrar cuál de los botones de sort está seleccionado. En otras palabras, esta función deselecciona el botón de sort seleccionado.
               elementArray.forEach(element => {
