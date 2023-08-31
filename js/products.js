@@ -181,8 +181,14 @@ else { // Si el usuario está logueado, hace lo siguiente:
         document.getElementById("rangeFilterBtn").addEventListener('click', () => {
           const minPrice = minPriceInput.valueAsNumber;
           const maxPrice = maxPriceInput.valueAsNumber;
-          if ((isNaN(minPrice) || minPrice < 0) && (isNaN(maxPrice) || maxPrice < 0)) // Validación de datos ingresados.
-            alert('Por favor ingrese valores válidos.');
+          // Validación de datos:
+          if (isNaN(minPrice) && isNaN(maxPrice))
+            alert('Por favor, ingrese valores numéricos.');
+          else if (minPrice < 0 || maxPrice < 0)
+            alert('Por favor, ingrese valores positivos.');
+          else if (minPrice > maxPrice)
+            alert('Por favor, ingrese un rango válido.');
+          // Si los datos son válidos:
           else if (searchBar.value === '') { // Caso 1: Filtro de búsqueda por texto no activo.
             productsFilteredByPrice = filterByPrice(productsArray, minPrice, maxPrice);
             applySorting(productsFilteredByPrice, sortingBtn);
