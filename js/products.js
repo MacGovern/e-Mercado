@@ -1,6 +1,7 @@
 const contenido = document.getElementById('products'); // Aquí es donde se insertan los list group items (https://getbootstrap.com/docs/5.3/components/list-group/) correspondientes a los productos de la categoría seleccionada.
 const searchBar = document.getElementById('searchBar'); // Barra de búsqueda donde el usuario puede filtrar productos por texto (título y descripción de los productos) en tiempo real.
 const sortingBtns = document.getElementById('sortingBtns'); // div que engloba a los botones de sort (inputs y labels).
+const elementArray = Array.from(sortingBtns.children); // Arreglo que contiene todos los elementos HTML que se encuentran dentro "sortingBtns".
 // Inputs donde el usuario puede filtrar productos por rango de precio al apretar el botón de filtrar.
 const minPriceInput = document.getElementById("rangeFilterMin");
 const maxPriceInput = document.getElementById("rangeFilterMax");
@@ -10,6 +11,37 @@ let productsFilteredByText;
 let productsFilteredByBoth;
 
 let sortingBtn = 'sortByRelevance'; // Sort seleccionado cuando el usuario hace clic en cualquiera de los botones de sort. Inicializado con un sort por relevancia (cantidad de productos vendidos), de mayor a menor.
+
+function changeSortingBtn() { // btn-dark lo utilizamos como indicador visual para mostrar cuál de los botones de sort está seleccionado. Esta función marca como deseleccionado al botón de sort que se muestra como seleccionado, y marca un nuevo botón de sort como seleccionado.
+  elementArray.forEach(element => {
+    element.classList.replace('btn-dark', 'btn-light'); // Deselecciona
+  });
+  let index;
+  switch (sortingBtn) {
+    case 'sortDescByCost':
+      index = 1;
+      break;
+    case 'sortAscByCost':
+      index = 3;
+      break;
+    case 'sortByRelevance':
+      index = 5;
+  }
+  elementArray[index].classList.replace('btn-light', 'btn-dark'); // Selecciona
+}
+
+function applySorting(array) {
+  switch (sortingBtn) {
+    case 'sortDescByCost':
+      array.sort((a, b) => b.cost - a.cost);
+      break;
+    case 'sortAscByCost':
+      array.sort((a, b) => a.cost - b.cost);
+      break;
+    case 'sortByRelevance':
+      array.sort((a, b) => b.soldCount - a.soldCount);
+  }
+}
 
 function showData(dataArray) { // Inserta en "contenido" los productos que se le pasan por parámetro (dataArray).
   contenido.innerHTML = '';
@@ -33,20 +65,23 @@ function showData(dataArray) { // Inserta en "contenido" los productos que se le
   }
 }
 
+function sortAndShowData(array) {
+  applySorting(array);
+  showData(array);
+}
+
+function filterByBothAndSortAndShowData() {
+  productsFilteredByBoth = filterByPrice(productsFilteredByText);
+  sortAndShowData(productsFilteredByBoth);
+}
+
 function removeDiacritics(str) { // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript (primera respuesta).
   return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
-function filterByText(array, text) {
-  const searchInput = removeDiacritics(text).toLowerCase();
-  return array.filter((product) => {
-    const productName = removeDiacritics(product.name).toLowerCase();
-    const productDescription = removeDiacritics(product.description).toLowerCase();
-    return productName.includes(searchInput) || productDescription.includes(searchInput);
-  });
-}
-
-function filterByPrice(array, minPrice, maxPrice) {
+function filterByPrice(array) {
+  const minPrice = minPriceInput.valueAsNumber;
+  const maxPrice = maxPriceInput.valueAsNumber;
   if (!isNaN(minPrice) && !isNaN(maxPrice)) { // Caso 1: El usario filtra habiendo establecido un mínimo y un máximo.
     return array.filter((product) => {
       return product.cost >= minPrice && product.cost <= maxPrice;
@@ -62,23 +97,9 @@ function filterByPrice(array, minPrice, maxPrice) {
   }
 }
 
-function applySorting(array, sortFunction) {
-  switch (sortFunction) {
-    case 'sortDescByCost':
-      array.sort((a, b) => b.cost - a.cost);
-      break;
-    case 'sortAscByCost':
-      array.sort((a, b) => a.cost - b.cost);
-      break;
-    case 'sortByRelevance':
-      array.sort((a, b) => b.soldCount - a.soldCount);
-  }
-}
-
 if (sessionStorage.getItem('signedIn') !== 'true') // En caso de que el usuario no esté logueado, te redirige a login.html.
   window.location.href = 'login.html';
 else { // Si el usuario está logueado, hace lo siguiente:
-
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.navbar-nav').lastElementChild.innerHTML = `<a class="nav-link" href="my-profile.html">${localStorage.getItem("email")}</a>`; // Agrega a la barra de navegación una manera de acceder al perfil del usuario.
     searchBar.value = '';
@@ -91,91 +112,63 @@ else { // Si el usuario está logueado, hace lo siguiente:
         const productsArray = data.products.sort((a, b) => b.soldCount - a.soldCount); // Productos ordenados por relevancia.
         showData(productsArray);
 
-        function sortAndShowData(sortingBtn) {
-          if (searchBar.value === '') {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 1: Ningún filtro activo.
-              applySorting(productsArray, sortingBtn);
-              showData(productsArray);
-            } else { // Caso 2: Filtro por precio activo.
-              applySorting(productsFilteredByPrice, sortingBtn);
-              showData(productsFilteredByPrice);
-            }
-          } else {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 3: Filtro de búsqueda por texto activo.
-              applySorting(productsFilteredByText, sortingBtn);
-              showData(productsFilteredByText);
-            } else { // Caso 4: Ambos filtros activos.
-              applySorting(productsFilteredByBoth, sortingBtn);
-              showData(productsFilteredByBoth);
-            }
-          }
+        function filterByPriceAndSortAndShowData() {
+          productsFilteredByPrice = filterByPrice(productsArray);
+          sortAndShowData(productsFilteredByPrice);
         }
 
         sortingBtns.addEventListener('click', (e) => { // Cuando el usuario hace clic en cualquiera de los botones de sort.
-          if (e.target.tagName === 'INPUT') { // Dado que hay varios elementos HTML superpuestos, cuando el usuario hace clic, técnicamente está cliqueando múltiples elementos, por lo que nos quedamos sólo con el input, pues este es el que contiene en su atributo id el tipo de sort que se aplicará.
+          if (e.target.tagName === 'INPUT' && sortingBtn !== e.target.getAttribute('id')) { // Dado que hay varios elementos HTML superpuestos, cuando el usuario hace clic, técnicamente está cliqueando múltiples elementos, por lo que nos quedamos sólo con el input, pues este es el que contiene en su atributo id el tipo de sort que se aplicará. Adicionalmente, sólo se entra al cuerpo del if si el botón de sort que fue cliqueado no es el mismo que ya está marcado como seleccionado. 
             sortingBtn = e.target.getAttribute('id');
-            const elementArray = Array.from(sortingBtns.children); // Arreglo que contiene todos los elementos HTML que se encuentran dentro "sortingBtns".
-
-            function darkToLight() { // Para cada elemento del arreglo elementArray, si tiene la clase btn-dark, la remplaza por la clase btn-light. btn-dark lo utilizamos como indicador visual para mostrar cuál de los botones de sort está seleccionado. En otras palabras, esta función deselecciona el botón de sort seleccionado.
-              elementArray.forEach(element => {
-                element.classList.replace('btn-dark', 'btn-light');
-              });
-            }
-
-            switch (sortingBtn) {
-              case 'sortDescByCost':
-                darkToLight();
-                elementArray[1].classList.replace('btn-light', 'btn-dark'); // Marca el botón de sort "sortDescByCost" como seleccionado.
-                sortAndShowData(sortingBtn);
-                break;
-              case 'sortAscByCost':
-                darkToLight();
-                elementArray[3].classList.replace('btn-light', 'btn-dark'); // Marca el botón de sort "sortAscByCost" como seleccionado.
-                sortAndShowData(sortingBtn);
-                break;
-              case 'sortByRelevance':
-                darkToLight();
-                elementArray[5].classList.replace('btn-light', 'btn-dark'); // Marca el botón de sort "sortByRelevance" como seleccionado.
-                sortAndShowData(sortingBtn);
+            changeSortingBtn();
+            if (searchBar.value === '') {
+              if (minPriceInput.value === '' && maxPriceInput.value === '')// Caso 1: Ningún filtro activo.
+                sortAndShowData(productsArray);
+              else // Caso 2: Filtro por precio activo.
+                sortAndShowData(productsFilteredByPrice);
+            } else {
+              if (minPriceInput.value === '' && maxPriceInput.value === '') // Caso 3: Filtro de búsqueda por texto activo.
+                sortAndShowData(productsFilteredByText);
+              else // Caso 4: Ambos filtros activos.
+                sortAndShowData(productsFilteredByBoth);
             }
           }
-        })
+        });
 
-        searchBar.addEventListener('input', (e) => {
-          const searchInput = e.target.value;
+        searchBar.addEventListener('input', () => {
+          const searchInput = searchBar.value;
+
+          function filterByText() {
+            const text = removeDiacritics(searchInput).toLowerCase();
+            return productsArray.filter((product) => {
+              const productName = removeDiacritics(product.name).toLowerCase();
+              const productDescription = removeDiacritics(product.description).toLowerCase();
+              return productName.includes(text) || productDescription.includes(text);
+            });
+          }
+
           if (searchInput === '') {
-            if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 1: Ningún filtro activo.
-              applySorting(productsArray, sortingBtn);
-              showData(productsArray);
-            } else { // Caso 2: Filtro por precio activo.
-              productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
-              applySorting(productsFilteredByPrice, sortingBtn);
-              showData(productsFilteredByPrice);
-            }
+            if (minPriceInput.value === '' && maxPriceInput.value === '') // Caso 1: Ningún filtro activo.
+              sortAndShowData(productsArray);
+            else // Caso 2: Filtro por precio activo.
+              filterByPriceAndSortAndShowData();
           } else {
             if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 3: Filtro de búsqueda por texto activo.
-              productsFilteredByText = filterByText(productsArray, searchInput);
-              applySorting(productsFilteredByText, sortingBtn);
-              showData(productsFilteredByText);
+              productsFilteredByText = filterByText();
+              sortAndShowData(productsFilteredByText);
             } else { // Caso 4: Ambos filtros activos.
-              productsFilteredByText = filterByText(productsArray, searchInput);
-              productsFilteredByBoth = filterByPrice(productsFilteredByText, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
-              applySorting(productsFilteredByBoth, sortingBtn);
-              showData(productsFilteredByBoth);
+              productsFilteredByText = filterByText();
+              filterByBothAndSortAndShowData();
             }
           }
         });
 
         document.getElementById('clearSearchFilterBtn').addEventListener('click', () => {
           searchBar.value = '';
-          if (minPriceInput.value === '' && maxPriceInput.value === '') { // Caso 1: Filtro por precio no activo.
-            applySorting(productsArray, sortingBtn);
-            showData(productsArray);
-          } else { // Caso 2: Filtro por precio activo.
-            productsFilteredByPrice = filterByPrice(productsArray, minPriceInput.valueAsNumber, maxPriceInput.valueAsNumber);
-            applySorting(productsFilteredByPrice, sortingBtn);
-            showData(productsFilteredByPrice);
-          }
+          if (minPriceInput.value === '' && maxPriceInput.value === '') // Caso 1: Filtro por precio no activo.
+            sortAndShowData(productsArray);
+          else // Caso 2: Filtro por precio activo.
+            filterByPriceAndSortAndShowData();
         });
 
         document.getElementById("rangeFilterBtn").addEventListener('click', () => {
@@ -189,24 +182,18 @@ else { // Si el usuario está logueado, hace lo siguiente:
           else if (minPrice > maxPrice)
             alert('Por favor, ingrese un rango válido.');
           // Si los datos son válidos:
-          else if (searchBar.value === '') { // Caso 1: Filtro de búsqueda por texto no activo.
-            productsFilteredByPrice = filterByPrice(productsArray, minPrice, maxPrice);
-            applySorting(productsFilteredByPrice, sortingBtn);
-            showData(productsFilteredByPrice);
-          } else { // Caso 2: Filtro de búsqueda por texto activo.
-            productsFilteredByBoth = filterByPrice(productsFilteredByText, minPrice, maxPrice);
-            applySorting(productsFilteredByBoth, sortingBtn);
-            showData(productsFilteredByBoth);
-          }
+          else if (searchBar.value === '') // Caso 1: Filtro de búsqueda por texto no activo.
+            filterByPriceAndSortAndShowData();
+          else // Caso 2: Filtro de búsqueda por texto activo.
+            filterByBothAndSortAndShowData();
         });
 
         document.getElementById("clearRangeFilterBtn").addEventListener('click', () => {
           minPriceInput.value = '';
           maxPriceInput.value = '';
-          if (searchBar.value === '') { // Caso 1: Filtro de búsqueda por texto no activo. 
-            applySorting(productsArray, sortingBtn);
-            showData(productsArray);
-          } else // Caso 2: Filtro de búsqueda por texto activo.
+          if (searchBar.value === '') // Caso 1: Filtro de búsqueda por texto no activo. 
+            sortAndShowData(productsArray);
+          else // Caso 2: Filtro de búsqueda por texto activo.
             showData(productsFilteredByText);
         });
 
