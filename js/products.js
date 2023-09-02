@@ -70,15 +70,6 @@ function sortAndShowData(array) {
   showData(array);
 }
 
-function filterByBothAndSortAndShowData() {
-  productsFilteredByBoth = filterByPrice(productsFilteredByText);
-  sortAndShowData(productsFilteredByBoth);
-}
-
-function removeDiacritics(str) { // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript (primera respuesta).
-  return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
-}
-
 function filterByPrice(array) {
   const minPrice = minPriceInput.valueAsNumber;
   const maxPrice = maxPriceInput.valueAsNumber;
@@ -95,6 +86,15 @@ function filterByPrice(array) {
       return product.cost >= minPrice;
     });
   }
+}
+
+function filterByBothAndSortAndShowData() {
+  productsFilteredByBoth = filterByPrice(productsFilteredByText);
+  sortAndShowData(productsFilteredByBoth);
+}
+
+function removeDiacritics(str) { // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript (primera respuesta).
+  return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
 if (sessionStorage.getItem('signedIn') !== 'true') // En caso de que el usuario no esté logueado, te redirige a login.html.
