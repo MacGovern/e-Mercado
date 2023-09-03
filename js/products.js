@@ -12,22 +12,28 @@ let productsFilteredByBoth;
 
 let sortingBtn = 'sortByRelevance'; // Sort seleccionado cuando el usuario hace clic en cualquiera de los botones de sort. Inicializado con un sort por relevancia (cantidad de productos vendidos), de mayor a menor.
 
-function changeSortingBtn() { // btn-dark lo utilizamos como indicador visual para mostrar cuál de los botones de sort está seleccionado. Esta función marca como deseleccionado al botón de sort que se muestra como seleccionado, y marca un nuevo botón de sort como seleccionado.
-  elementArray.forEach(element => {
-    element.classList.replace('btn-dark', 'btn-light'); // Deselecciona
-  });
-  let index;
-  switch (sortingBtn) {
+function changeSortingBtn(newSortingBtn) { // btn-dark lo utilizamos como indicador visual para mostrar cuál de los botones de sort está seleccionado. Esta función marca como deseleccionado al botón de sort que se muestra como seleccionado, y marca un nuevo botón de sort como seleccionado.
+  switch (sortingBtn) { // Deselecciona
     case 'sortDescByCost':
-      index = 1;
+      elementArray[1].classList.replace('btn-dark', 'btn-light'); 
       break;
     case 'sortAscByCost':
-      index = 3;
+      elementArray[3].classList.replace('btn-dark', 'btn-light');
       break;
     case 'sortByRelevance':
-      index = 5;
+      elementArray[5].classList.replace('btn-dark', 'btn-light');
   }
-  elementArray[index].classList.replace('btn-light', 'btn-dark'); // Selecciona
+  switch (newSortingBtn) { // Selecciona
+    case 'sortDescByCost':
+      elementArray[1].classList.replace('btn-light', 'btn-dark'); 
+      break;
+    case 'sortAscByCost':
+      elementArray[3].classList.replace('btn-light', 'btn-dark');
+      break;
+    case 'sortByRelevance':
+      elementArray[5].classList.replace('btn-light', 'btn-dark');
+  }
+  sortingBtn = newSortingBtn; // Actualiza sortingBtn.
 }
 
 function applySorting(array) {
@@ -119,8 +125,7 @@ else { // Si el usuario está logueado, hace lo siguiente:
 
         sortingBtns.addEventListener('click', (e) => { // Cuando el usuario hace clic en cualquiera de los botones de sort.
           if (e.target.tagName === 'INPUT' && sortingBtn !== e.target.getAttribute('id')) { // Dado que hay varios elementos HTML superpuestos, cuando el usuario hace clic, técnicamente está cliqueando múltiples elementos, por lo que nos quedamos sólo con el input, pues este es el que contiene en su atributo id el tipo de sort que se aplicará. Adicionalmente, sólo se entra al cuerpo del if si el botón de sort que fue cliqueado no es el mismo que ya está marcado como seleccionado. 
-            sortingBtn = e.target.getAttribute('id');
-            changeSortingBtn();
+            changeSortingBtn(e.target.getAttribute('id'));           
             if (searchBar.value === '') {
               if (minPriceInput.value === '' && maxPriceInput.value === '')// Caso 1: Ningún filtro activo.
                 sortAndShowData(productsArray);
