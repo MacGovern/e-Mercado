@@ -168,7 +168,7 @@ else {
     });
 }
 
-window.addEventListener("load", () => {
+document.addEventListener("DOMContentLoaded", () => {
     let email = localStorage.getItem("email");
     let nav = document.querySelector("nav.navbar");
     let navItems = nav.getElementsByClassName("nav-item");
