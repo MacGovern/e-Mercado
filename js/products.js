@@ -107,7 +107,14 @@ if (sessionStorage.getItem('signedIn') !== 'true') // En caso de que el usuario 
   window.location.href = 'login.html';
 else { // Si el usuario está logueado, hace lo siguiente:
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.navbar-nav').lastElementChild.innerHTML = `<a class="nav-link" href="my-profile.html">${localStorage.getItem("email")}</a>`; // Agrega a la barra de navegación una manera de acceder al perfil del usuario.
+    // document.querySelector('.navbar-nav').lastElementChild.innerHTML = `<a class="nav-link" href="my-profile.html">${localStorage.getItem("email")}</a>`; // Agrega a la barra de navegación una manera de acceder al perfil del usuario.
+    
+    let email = localStorage.getItem("email");
+    let nav = document.querySelector("nav.navbar");
+    let navItems = nav.getElementsByClassName("nav-item");
+    let ultimoNav = navItems[navItems.length - 1];
+    ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
+    
     searchBar.value = '';
     fetch(`https://japceibal.github.io/emercado-api/cats_products/${localStorage.getItem("catID")}.json`)
       .then((response) => response.json())
