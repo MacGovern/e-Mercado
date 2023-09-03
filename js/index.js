@@ -1,7 +1,13 @@
 if(sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
-else{
+else
     document.addEventListener("DOMContentLoaded", function(){
+        let email = localStorage.getItem("email");
+        let nav = document.querySelector("nav.navbar");
+        let navItems = nav.getElementsByClassName("nav-item");
+        let ultimoNav = navItems[navItems.length - 1];
+        ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
+        
         document.getElementById("autos").addEventListener("click", function() {
             localStorage.setItem("catID", 101);
             window.location = "products.html"
@@ -15,12 +21,3 @@ else{
             window.location = "products.html"
         });
     });
-}
-
-window.addEventListener("load", () => {
-  let email = localStorage.getItem("email");
-  let nav = document.querySelector("nav.navbar");
-  let navItems = nav.getElementsByClassName("nav-item");
-  let ultimoNav = navItems[navItems.length - 1];
-  ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
-});
