@@ -52,8 +52,8 @@ function applySorting(array) {
 
 function setProductID(id) {
   localStorage.setItem("productID", id);
-  window.location = "product-info.html"
-};
+  window.location = "product-info.html";
+}
 
 function showData(dataArray) { // Inserta en "contenido" los productos que se le pasan por parámetro (dataArray).
   contenido.innerHTML = '';
