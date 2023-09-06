@@ -49,11 +49,17 @@ function applySorting(array) {
   }
 }
 
+
+function setProducts(id) {
+  localStorage.setItem("products", id);
+  window.location = "product-info.html"
+};
+
 function showData(dataArray) { // Inserta en "contenido" los productos que se le pasan por parámetro (dataArray).
   contenido.innerHTML = '';
   for (const item of dataArray) {
     contenido.innerHTML += `
-            <div class="list-group-item list-group-item-action cursor-active">
+            <div onclick="setProducts(${dataArray.id})"class="list-group-item list-group-item-action cursor-active">
                 <div class="row">
                     <div class="col-3">
                         <img src="${item.image}" alt="Imagen del producto" class="img-thumbnail">
