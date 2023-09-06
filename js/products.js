@@ -50,8 +50,8 @@ function applySorting(array) {
 }
 
 
-function setProducts(id) {
-  localStorage.setItem("product", id);
+function setProductID(id) {
+  localStorage.setItem("productID", id);
   window.location = "product-info.html"
 };
 
@@ -59,7 +59,7 @@ function showData(dataArray) { // Inserta en "contenido" los productos que se le
   contenido.innerHTML = '';
   for (const item of dataArray) {
     contenido.innerHTML += `
-            <div onclick="setProducts(${item.id})"class="list-group-item list-group-item-action cursor-active">
+            <div onclick="setProductID(${item.id})"class="list-group-item list-group-item-action cursor-active">
                 <div class="row">
                     <div class="col-3">
                         <img src="${item.image}" alt="Imagen del producto" class="img-thumbnail">
