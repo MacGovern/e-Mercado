@@ -1,4 +1,4 @@
-if(sessionStorage.getItem("signedIn") !== "true")
+if (sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
 else
     document.addEventListener("DOMContentLoaded", () => {
@@ -7,46 +7,44 @@ else
         let navItems = nav.getElementsByClassName("nav-item");
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
-    
-        function showProductsInfo(productoSeleccionado) { //función para mostrar la información de los productos.
-            const divcont = document.getElementById("listaProductos");
-            divcont.innerHTML += `
-            <h2>${productoSeleccionado.name}</h2>
+
+        function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
+            document.getElementById("listaProductos").innerHTML += `
+                <h2 class="mb-5">${productoSeleccionado.name}</h2>
                 <hr>
-            <h5>Precio</h5>
-                <p>${productoSeleccionado.cost}</p>
-            <h5>Descripción</h5>
+                <h5><strong>Precio</strong></h5>
+                <p>${productoSeleccionado.currency} ${productoSeleccionado.cost}</p>
+                <h5><strong>Descripción</strong></h5>
                 <p>${productoSeleccionado.description}</p>
-            <h5>Categoría</h5>
+                <h5><strong>Categoría</strong></h5>
                 <p>${productoSeleccionado.category}</p>
-            <h5>Cantidad de vendidos</h5>
+                <h5><strong>Cantidad de vendidos</strong></h5>
                 <p>${productoSeleccionado.soldCount}</p>
-            <h5>Imágenes ilustrativas</h5>
-            <div class="row">
+                <h5><strong>Imágenes ilustrativas</strong></h5>
+                <div class="row mt-3">
                 <div class="col-3">
-                    <img src="${productoSeleccionado.images[0]}" alt="Imagen 1" class="img-fluid">
+                    <img src="${productoSeleccionado.images[0]}" alt="Imagen 1" class="img-fluid img-thumbnail">
                 </div>
                 <div class="col-3">
-                    <img src="${productoSeleccionado.images[1]}" alt="Imagen 2" class="img-fluid">
+                    <img src="${productoSeleccionado.images[1]}" alt="Imagen 2" class="img-fluid img-thumbnail">
                 </div>
                 <div class="col-3">
-                    <img src="${productoSeleccionado.images[2]}" alt="Imagen 3" class="img-fluid">
+                    <img src="${productoSeleccionado.images[2]}" alt="Imagen 3" class="img-fluid img-thumbnail">
                 </div>
                 <div class="col-3">
-                    <img src="${productoSeleccionado.images[3]}" alt="Imagen 4" class="img-fluid">
+                    <img src="${productoSeleccionado.images[3]}" alt="Imagen 4" class="img-fluid img-thumbnail">
                 </div>
-            </div>
-                `;
+                </div>
+            `;
         }
 
         fetch(`https://japceibal.github.io/emercado-api/products/${localStorage.getItem('productID')}.json`)
             .then(response => response.json())
             .then(productoSeleccionado => {
-                showProductsInfo(productoSeleccionado);
+                showProductInfo(productoSeleccionado);
             })
 
             .catch(error => {
                 console.error('Error: ', error);
             });
-
     });

@@ -11,6 +11,13 @@
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    input[type="radio"],
+    .checked {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -38,35 +45,64 @@
     </div>
   </nav>
   <main>
-    <div class="container" id="listaProductos">
-
+    <div class="container my-5" id="listaProductos">
+      <!-- Acá va la información del producto seleccionado. -->
     </div>
-<div>
-  <form>
-    <h1>Comentar:</h1>
-   
-    <label for="opinion">Tu opinión:</label><br><br>
-    <textarea id="opinion" name="opinion" rows="5" cols="50" placeholder="Escribe aquí..."></textarea><br><br>
-    
-    <label for="puntuacion">Tu puntuación:</label> <br><br>
-    <span class="fa fa-star"></span>
-    <span class="fa fa-star"></span>
-    <span class="fa fa-star"></span>
-    <span class="fa fa-star"></span>
-    <span class="fa fa-star"></span>
-    
-    <br><br>
-    
-    <button class="btn btn-primary" type="submit">Enviar</button>
-  </form>
-</div>
+
+    <div class="container">
+      <form>
+        <h3>Comentar</h3>
+
+        <label for="commentDescription" class="form-label">Tu opinión:</label>
+        <textarea class="form-control" id="commentDescription" name="commentDescription" rows="5" placeholder="Escribe aquí..."></textarea>
+
+        <div class="row my-3">
+          <label for="starBtns" class="col-auto">Tu puntuación:</label>
+          <div id="starBtns" class="col-auto">
+            <input type="radio" name="commentScore" id="star1" value="1" required>
+            <label for="star1">
+              <i class="unchecked cursor-active far fa-star"></i>
+              <i class="checked cursor-active fas fa-star"></i>
+            </label>
+
+            <input type="radio" name="commentScore" id="star2" value="2" required>
+            <label for="star2">
+              <i class="unchecked cursor-active far fa-star"></i>
+              <i class="checked cursor-active fas fa-star"></i>
+            </label>
+
+            <input type="radio" name="commentScore" id="star3" value="3" required>
+            <label for="star3">
+              <i class="unchecked cursor-active far fa-star"></i>
+              <i class="checked cursor-active fas fa-star"></i>
+            </label>
+
+            <input type="radio" name="commentScore" id="star4" value="4" required>
+            <label for="star4">
+              <i class="unchecked cursor-active far fa-star"></i>
+              <i class="checked cursor-active fas fa-star"></i>
+            </label>
+
+            <input type="radio" name="commentScore" id="star5" value="5" required>
+            <label for="star5">
+              <i class="unchecked cursor-active far fa-star"></i>
+              <i class="checked cursor-active fas fa-star"></i>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Enviar</button>
+      </form>
+    </div>
   </main>
   <footer class="text-muted">
     <div class="container">
       <p class="float-end">
         <a href="#">Volver arriba</a>
       </p>
-      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
+      <p>
+        Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a>
+      </p>
     </div>
   </footer>
   <div id="spinner-wrapper">
