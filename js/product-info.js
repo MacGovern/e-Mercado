@@ -12,17 +12,16 @@ else
             e.preventDefault();
             const d = new Date();
             const longDateTime = d.toISOString();
-            const newComment = {
-                product: parseInt(localStorage.getItem('productID')),
-                score: document.getElementById('commentScore').valueAsNumber,
-                description: document.getElementById('commentDescription').value,
-                user: localStorage.getItem('email'),
-                dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
-            }
             let additionalComments = JSON.parse(localStorage.getItem(localStorage.getItem('productID')));
             if (additionalComments === null)
                 additionalComments = [];
-            additionalComments.push(newComment);
+            additionalComments.push({
+                product: parseInt(localStorage.getItem('productID')),
+                score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
+                description: document.getElementById('commentDescription').value,
+                user: localStorage.getItem('email'),
+                dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
+            });
             showComments(additionalComments);
             localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
         })
