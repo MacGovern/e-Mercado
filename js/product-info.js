@@ -8,6 +8,8 @@ else
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
 
+        const commentForm = document.getElementById('commentForm');
+
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("listaProductos").innerHTML += `
                 <h2 class="mb-5">${productoSeleccionado.name}</h2>
@@ -48,7 +50,7 @@ else
                 console.error('Error: ', error);
             });
             
-            document.getElementById('commentForm').addEventListener('submit', (e) => {
+            commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
             const longDateTime = d.toISOString();
@@ -59,10 +61,12 @@ else
                 product: parseInt(localStorage.getItem('productID')),
                 score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
                 description: document.getElementById('commentDescription').value,
-                user: localStorage.getItem('email'),
+                user: email,
                 dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
             });
-            showComments(additionalComments);
-            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
+            commentForm.reset();
+            // La siguiente linea esta comentada porque, hasta que showComments() no exista, las demas lineas posteriores a la invocacion de la funcion no se ejecutaran.
+            // showComments(additionalComments);
+            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));            
         })
     });
