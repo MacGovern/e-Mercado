@@ -189,15 +189,3 @@ a.custom-card:hover {
   color: orange;
 }
 
-.btn-primary {
-  background-color: blue;
-  color: white; 
-  border: none; 
-  padding: 10px 20px; 
-  cursor: pointer; 
-
-}
-
-.btn-primary:hover {
-  background-color: darkblue; 
-}
