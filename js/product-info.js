@@ -49,24 +49,46 @@ else
             .catch(error => {
                 console.error('Error: ', error);
             });
-            
-            commentForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const d = new Date();
-            const longDateTime = d.toISOString();
-            let additionalComments = JSON.parse(localStorage.getItem(localStorage.getItem('productID')));
-            if (additionalComments === null)
-                additionalComments = [];
-            additionalComments.push({
-                product: parseInt(localStorage.getItem('productID')),
-                score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
-                description: document.getElementById('commentDescription').value,
-                user: email,
-                dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
-            });
-            commentForm.reset();
-            // La siguiente linea esta comentada porque, hasta que showComments() no exista, las demas lineas posteriores a la invocacion de la funcion no se ejecutaran.
-            // showComments(additionalComments);
-            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));            
-        })
+
     });
+
+    const starContainer = document.getElementById('starBtns');
+    const stars = starContainer.querySelectorAll('i');
+    starContainer.addEventListener('mouseover', (e) => {
+        const selectedStar = e.target.closest('i');
+        if (selectedStar) {
+            const selectedIndex = Array.from(stars).indexOf(selectedStar);
+            for (let i = 0; i <= selectedIndex; i++) {
+                stars[i].classList.remove('far');
+                stars[i].classList.add('fas');
+                stars[i].style.color = 'orange';
+            }
+        }
+    });
+    starContainer.addEventListener('mouseout', () => {
+        stars.forEach((star) => {
+            star.classList.remove('fas');
+            star.classList.add('far');
+            star.style.color = '';
+        });
+    });
+
+commentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new Date();
+    const longDateTime = d.toISOString();
+    let additionalComments = JSON.parse(localStorage.getItem(localStorage.getItem('productID')));
+    if (additionalComments === null)
+        additionalComments = [];
+    additionalComments.push({
+        product: parseInt(localStorage.getItem('productID')),
+        score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
+        description: document.getElementById('commentDescription').value,
+        user: email,
+        dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
+    });
+    commentForm.reset();
+    // La siguiente linea esta comentada porque, hasta que showComments() no exista, las demas lineas posteriores a la invocacion de la funcion no se ejecutaran.
+    // showComments(additionalComments);
+    localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
+})
