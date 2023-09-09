@@ -8,6 +8,9 @@ else
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
 
+        const starContainer = document.getElementById('starBtns');
+        const stars = Array.from(starContainer.getElementsByTagName('i'));
+        let selectedIndex;
         const commentForm = document.getElementById('commentForm');
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
@@ -49,8 +52,23 @@ else
             .catch(error => {
                 console.error('Error: ', error);
             });
-            
-            commentForm.addEventListener('submit', (e) => {
+
+        starContainer.addEventListener('mouseover', (e) => {
+            selectedIndex = stars.indexOf(e.target);
+            for (let i = 0; i <= selectedIndex; i += 2) {
+                stars[i].style.display = 'none'; // Oculta estrella unchecked
+                stars[i + 1].style.display = 'inline-block'; // Muestra estrella checked
+            }
+        });
+
+        starContainer.addEventListener('mouseout', () => {
+            for (let i = 0; i <= selectedIndex; i += 2) {
+                stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
+                stars[i + 1].style.display = 'none'; // Oculta estrella checked
+            }
+        });
+
+        commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
             const longDateTime = d.toISOString();
@@ -67,6 +85,6 @@ else
             commentForm.reset();
             // La siguiente linea esta comentada porque, hasta que showComments() no exista, las demas lineas posteriores a la invocacion de la funcion no se ejecutaran.
             // showComments(additionalComments);
-            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));            
+            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
         })
     });
