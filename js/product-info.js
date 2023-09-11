@@ -8,7 +8,10 @@ else
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
 
+        const listaComentarios = document.getElementById("listaComentarios");
+        const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
+        let additionalComments = JSON.parse(localStorage.getItem(productID));
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("listaProductos").innerHTML += `
@@ -40,63 +43,44 @@ else
             `;
         }
 
-        fetch(`https://japceibal.github.io/emercado-api/products/${localStorage.getItem('productID')}.json`)
-            .then(response => response.json())
-            .then(productoSeleccionado => {
-                showProductInfo(productoSeleccionado);
-            })
-
-            .catch(error => {
-                console.error('Error: ', error);
-            });
-
-        function showComments(commentsList) {
-            for (const comment of commentsList) {
+        function showComments(commentsList) { // Función para mostrar los comentarios del producto seleccionado.
+            commentsList.forEach(comment => {
                 let stars = "";
-                for (let i = 0; i < comment.score; i++) {
-                    stars += `
-                        <span class="fa fa-star" style="color: orange;"></span>
-                    `
-                }
-                for (let i = 0; i < 5 - comment.score; i++) {
-                    stars += `
-                        <span class="unchecked far fa-star"></span>
-                    `
-                }
-                document.getElementById("listaComentarios").innerHTML += `
-                    <div class="list-group-item list-group-item-action cursor-active">
-                        <div class="row">
-                            <div class="col">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars} </p>
-                                </div>
-                                <p class="mb-1">${comment.description}</p>
-                            </div>
-                        </div>
+                for (let i = 1; i <= comment.score; i++)
+                    stars += `<i class="checked fas fa-star"></i>`; // Estrella checked.
+                for (let i = 1; i <= 5 - comment.score; i++)
+                    stars += `<i class="far fa-star"></i>`; // Estrella unchecked.
+                listaComentarios.innerHTML += `
+                    <div class="list-group-item list-group-item-action">
+                        <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars}</p>
+                        <p class="mb-1">${comment.description}</p>
                     </div>
-                `
-            }
+                `;
+            });
         }
 
-        fetch(`https://japceibal.github.io/emercado-api/products_comments/${localStorage.getItem('productID')}.json`)
+        fetch(`https://japceibal.github.io/emercado-api/products/${productID}.json`)
+            .then(response => response.json())
+            .then(productoSeleccionado => showProductInfo(productoSeleccionado))
+            .catch(error => console.error('Error: ', error));
+
+        fetch(`https://japceibal.github.io/emercado-api/products_comments/${productID}.json`)
             .then(response => response.json())
             .then(productComments => {
                 showComments(productComments);
+                if (additionalComments !== null)
+                    showComments(additionalComments);
+                else
+                    additionalComments = [];
             })
-
-            .catch(error => {
-                console.error('Error: ', error);
-            });
+            .catch(error => console.error('Error: ', error));
 
         commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
-            const longDateTime = d.toISOString();
-            let additionalComments = JSON.parse(localStorage.getItem(localStorage.getItem('productID')));
-            if (additionalComments === null)
-                additionalComments = [];
+            const longDateTime = d.toISOString();                
             additionalComments.push({
-                product: parseInt(localStorage.getItem('productID')),
+                product: parseInt(productID),
                 score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
                 description: document.getElementById('commentDescription').value,
                 user: email,
@@ -104,6 +88,6 @@ else
             });
             commentForm.reset();
             showComments(additionalComments);
-            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
+            localStorage.setItem(productID, JSON.stringify(additionalComments));
         })
     });
