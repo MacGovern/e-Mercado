@@ -49,8 +49,46 @@ else
             .catch(error => {
                 console.error('Error: ', error);
             });
-            
-            commentForm.addEventListener('submit', (e) => {
+
+        function showComments(commentsList) {
+            for (const comment of commentsList) {
+                let stars = "";
+                for (let i = 0; i < comment.score; i++) {
+                    stars += `
+                        <span class="fa fa-star" style="color: orange;"></span>
+                    `
+                }
+                for (let i = 0; i < 5 - comment.score; i++) {
+                    stars += `
+                        <span class="unchecked far fa-star"></span>
+                    `
+                }
+                document.getElementById("listaComentarios").innerHTML += `
+                    <div class="list-group-item list-group-item-action cursor-active">
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars} </p>
+                                </div>
+                                <p class="mb-1">${comment.description}</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        }
+
+        fetch(`https://japceibal.github.io/emercado-api/products_comments/${localStorage.getItem('productID')}.json`)
+            .then(response => response.json())
+            .then(productComments => {
+                showComments(productComments);
+            })
+
+            .catch(error => {
+                console.error('Error: ', error);
+            });
+
+        commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
             const longDateTime = d.toISOString();
@@ -65,8 +103,7 @@ else
                 dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
             });
             commentForm.reset();
-            // La siguiente linea esta comentada porque, hasta que showComments() no exista, las demas lineas posteriores a la invocacion de la funcion no se ejecutaran.
-            // showComments(additionalComments);
-            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));            
+            showComments(additionalComments);
+            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
         })
     });
