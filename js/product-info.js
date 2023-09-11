@@ -43,19 +43,23 @@ else
             `;
         }
 
-        function showComments(commentsList) { // Función para mostrar los comentarios del producto seleccionado.
-            commentsList.forEach(comment => {
-                let stars = "";
-                for (let i = 1; i <= comment.score; i++)
-                    stars += `<i class="checked fas fa-star"></i>`; // Estrella checked.
-                for (let i = 1; i <= 5 - comment.score; i++)
-                    stars += `<i class="far fa-star"></i>`; // Estrella unchecked.
-                listaComentarios.innerHTML += `
+        function showComment(comment) {
+            let stars = "";
+            for (let i = 1; i <= comment.score; i++)
+                stars += `<i class="checked fas fa-star"></i>`; // Estrella checked.
+            for (let i = 1; i <= 5 - comment.score; i++)
+                stars += `<i class="far fa-star"></i>`; // Estrella unchecked.
+            listaComentarios.innerHTML += `
                     <div class="list-group-item list-group-item-action">
                         <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars}</p>
                         <p class="mb-1">${comment.description}</p>
                     </div>
                 `;
+        }
+
+        function showComments(commentsList) { // Función para mostrar los comentarios del producto seleccionado.
+            commentsList.forEach(comment => {
+                showComment(comment);
             });
         }
 
@@ -78,16 +82,17 @@ else
         commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
-            const longDateTime = d.toISOString();                
-            additionalComments.push({
+            const longDateTime = d.toISOString();
+            const comment = {
                 product: parseInt(productID),
                 score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
                 description: document.getElementById('commentDescription').value,
                 user: email,
                 dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
-            });
+            }
+            additionalComments.push(comment);
             commentForm.reset();
-            showComments(additionalComments);
+            showComment(comment);
             localStorage.setItem(productID, JSON.stringify(additionalComments));
         })
     });
