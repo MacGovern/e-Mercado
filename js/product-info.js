@@ -12,6 +12,9 @@ else
         const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
         let additionalComments = JSON.parse(localStorage.getItem(productID));
+        const starContainer = document.getElementById('starBtns');
+        const stars = Array.from(starContainer.getElementsByTagName('i'));
+        let selectedIndex;
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("listaProductos").innerHTML += `
@@ -43,7 +46,7 @@ else
             `;
         }
 
-        function showComment(comment) {
+        function showComment(comment) { // Función para mostrar un comentario del producto seleccionado.
             let stars = "";
             for (let i = 1; i <= comment.score; i++)
                 stars += `<i class="checked fas fa-star"></i>`; // Estrella checked.
@@ -79,19 +82,39 @@ else
             })
             .catch(error => console.error('Error: ', error));
 
+        starContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'I') {
+                selectedIndex = stars.indexOf(e.target);
+                if (selectedIndex % 2 === 1) // Estrella checked seleccionada
+                    for (let i = selectedIndex + 1; i < stars.length; i += 2) {
+                        stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
+                        stars[i + 1].style.display = 'none'; // Oculta estrella checked
+                    }
+                else // Estrella unchecked seleccionada
+                    for (let i = 0; i <= selectedIndex; i += 2) {
+                        stars[i].style.display = 'none'; // Oculta estrella unchecked
+                        stars[i + 1].style.display = 'inline-block'; // Muestra estrella checked
+                    }
+            }
+        });
+
         commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
             const longDateTime = d.toISOString();
             const comment = {
                 product: parseInt(productID),
-                score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
+                score: parseInt(document.querySelector('input[name="selectedScore"]:checked').value),
                 description: document.getElementById('commentDescription').value,
                 user: email,
                 dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
             }
             additionalComments.push(comment);
             commentForm.reset();
+            for (let i = 0; i <= selectedIndex; i += 2) { // Resetea las estrellas
+                stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
+                stars[i + 1].style.display = 'none'; // Oculta estrella checked
+            }
             showComment(comment);
             localStorage.setItem(productID, JSON.stringify(additionalComments));
         })
