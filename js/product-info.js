@@ -30,18 +30,18 @@ else
                 <p>${productoSeleccionado.soldCount}</p>
                 <h5><strong>Imágenes ilustrativas</strong></h5>
                 <div class="row mt-3">
-                <div class="col-3">
-                    <img src="${productoSeleccionado.images[0]}" alt="Imagen 1" class="img-fluid img-thumbnail">
-                </div>
-                <div class="col-3">
-                    <img src="${productoSeleccionado.images[1]}" alt="Imagen 2" class="img-fluid img-thumbnail">
-                </div>
-                <div class="col-3">
-                    <img src="${productoSeleccionado.images[2]}" alt="Imagen 3" class="img-fluid img-thumbnail">
-                </div>
-                <div class="col-3">
-                    <img src="${productoSeleccionado.images[3]}" alt="Imagen 4" class="img-fluid img-thumbnail">
-                </div>
+                    <div class="col-3">
+                        <img src="${productoSeleccionado.images[0]}" alt="Imagen 1" class="img-fluid img-thumbnail">
+                    </div>
+                    <div class="col-3">
+                        <img src="${productoSeleccionado.images[1]}" alt="Imagen 2" class="img-fluid img-thumbnail">
+                    </div>
+                    <div class="col-3">
+                        <img src="${productoSeleccionado.images[2]}" alt="Imagen 3" class="img-fluid img-thumbnail">
+                    </div>
+                    <div class="col-3">
+                        <img src="${productoSeleccionado.images[3]}" alt="Imagen 4" class="img-fluid img-thumbnail">
+                    </div>
                 </div>
             `;
         }
