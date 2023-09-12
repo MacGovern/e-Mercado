@@ -7,10 +7,13 @@ else
         let navItems = nav.getElementsByClassName("nav-item");
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
-
+      
+        const listaComentarios = document.getElementById("listaComentarios");
+        const productID = localStorage.getItem('productID');
+        const commentForm = document.getElementById('commentForm');
+        let additionalComments = JSON.parse(localStorage.getItem(productID));
         const starContainer = document.getElementById('starBtns');
         const stars = Array.from(starContainer.getElementsByTagName('i'));
-        const commentForm = document.getElementById('commentForm');
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("listaProductos").innerHTML += `
@@ -42,15 +45,41 @@ else
             `;
         }
 
-        fetch(`https://japceibal.github.io/emercado-api/products/${localStorage.getItem('productID')}.json`)
-            .then(response => response.json())
-            .then(productoSeleccionado => {
-                showProductInfo(productoSeleccionado);
-            })
+        function showComment(comment) {
+            let stars = "";
+            for (let i = 1; i <= comment.score; i++)
+                stars += `<i class="checked fas fa-star"></i>`; // Estrella checked.
+            for (let i = 1; i <= 5 - comment.score; i++)
+                stars += `<i class="far fa-star"></i>`; // Estrella unchecked.
+            listaComentarios.innerHTML += `
+                    <div class="list-group-item list-group-item-action">
+                        <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars}</p>
+                        <p class="mb-1">${comment.description}</p>
+                    </div>
+                `;
+        }
 
-            .catch(error => {
-                console.error('Error: ', error);
+        function showComments(commentsList) { // Función para mostrar los comentarios del producto seleccionado.
+            commentsList.forEach(comment => {
+                showComment(comment);
             });
+        }
+
+        fetch(`https://japceibal.github.io/emercado-api/products/${productID}.json`)
+            .then(response => response.json())
+            .then(productoSeleccionado => showProductInfo(productoSeleccionado))
+            .catch(error => console.error('Error: ', error));
+
+        fetch(`https://japceibal.github.io/emercado-api/products_comments/${productID}.json`)
+            .then(response => response.json())
+            .then(productComments => {
+                showComments(productComments);
+                if (additionalComments !== null)
+                    showComments(additionalComments);
+                else
+                    additionalComments = [];
+            })
+            .catch(error => console.error('Error: ', error));
 
         // starContainer.addEventListener('mouseover', (e) => {
         //     selectedIndex = stars.indexOf(e.target);
@@ -69,36 +98,33 @@ else
 
         starContainer.addEventListener('click', (e) => {
             e.preventDefault(); // Esto impide que el event handler se invoque dos veces.
-                let selectedIndex = stars.indexOf(e.target);
-                if (selectedIndex % 2 === 1) // Estrella checked seleccionada
-                    for (let i = selectedIndex + 1; i < stars.length; i += 2) {
-                        stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
-                        stars[i + 1].style.display = 'none'; // Oculta estrella checked
-                    }
-                else // Estrella unchecked seleccionada
-                    for (let i = 0; i <= selectedIndex; i += 2) {
-                        stars[i].style.display = 'none'; // Oculta estrella unchecked
-                        stars[i + 1].style.display = 'inline-block'; // Muestra estrella checked
-                    }
-        })
+            let selectedIndex = stars.indexOf(e.target);
+            if (selectedIndex % 2 === 1) // Estrella checked seleccionada
+                for (let i = selectedIndex + 1; i < stars.length; i += 2) {
+                    stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
+                    stars[i + 1].style.display = 'none'; // Oculta estrella checked
+                }
+            else // Estrella unchecked seleccionada
+                for (let i = 0; i <= selectedIndex; i += 2) {
+                    stars[i].style.display = 'none'; // Oculta estrella unchecked
+                    stars[i + 1].style.display = 'inline-block'; // Muestra estrella checked
+                }
+        });
 
         commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const d = new Date();
             const longDateTime = d.toISOString();
-            let additionalComments = JSON.parse(localStorage.getItem(localStorage.getItem('productID')));
-            if (additionalComments === null)
-                additionalComments = [];
-            additionalComments.push({
-                product: parseInt(localStorage.getItem('productID')),
+            const comment = {
+                product: parseInt(productID),
                 score: parseInt(document.querySelector('input[name="commentScore"]:checked').value),
                 description: document.getElementById('commentDescription').value,
                 user: email,
                 dateTime: `${longDateTime.slice(0, 10)} ${longDateTime.slice(11, 19)}`
-            });
+            }
+            additionalComments.push(comment);
             commentForm.reset();
-            // La siguiente linea esta comentada porque, hasta que showComments() no exista, las demas lineas posteriores a la invocacion de la funcion no se ejecutaran.
-            // showComments(additionalComments);
-            localStorage.setItem(localStorage.getItem('productID'), JSON.stringify(additionalComments));
+            showComment(comment);
+            localStorage.setItem(productID, JSON.stringify(additionalComments));
         })
     });
