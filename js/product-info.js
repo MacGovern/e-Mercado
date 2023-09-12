@@ -7,11 +7,13 @@ else
         let navItems = nav.getElementsByClassName("nav-item");
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `<a class="nav-link" href="my-profile.html">${email}</a>`;
-
+      
         const listaComentarios = document.getElementById("listaComentarios");
         const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
         let additionalComments = JSON.parse(localStorage.getItem(productID));
+        const starContainer = document.getElementById('starBtns');
+        const stars = Array.from(starContainer.getElementsByTagName('i'));
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("listaProductos").innerHTML += `
@@ -78,6 +80,36 @@ else
                     additionalComments = [];
             })
             .catch(error => console.error('Error: ', error));
+
+        // starContainer.addEventListener('mouseover', (e) => {
+        //     selectedIndex = stars.indexOf(e.target);
+        //     for (let i = 0; i <= selectedIndex; i += 2) {
+        //         stars[i].style.display = 'none'; // Oculta estrella unchecked
+        //         stars[i + 1].style.display = 'inline-block'; // Muestra estrella checked
+        //     }
+        // });
+
+        // starContainer.addEventListener('mouseout', () => {
+        //     for (let i = 0; i <= selectedIndex; i += 2) {
+        //         stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
+        //         stars[i + 1].style.display = 'none'; // Oculta estrella checked
+        //     }
+        // });
+
+        starContainer.addEventListener('click', (e) => {
+            e.preventDefault(); // Esto impide que el event handler se invoque dos veces.
+            let selectedIndex = stars.indexOf(e.target);
+            if (selectedIndex % 2 === 1) // Estrella checked seleccionada
+                for (let i = selectedIndex + 1; i < stars.length; i += 2) {
+                    stars[i].style.display = 'inline-block'; // Muestra estrella unchecked
+                    stars[i + 1].style.display = 'none'; // Oculta estrella checked
+                }
+            else // Estrella unchecked seleccionada
+                for (let i = 0; i <= selectedIndex; i += 2) {
+                    stars[i].style.display = 'none'; // Oculta estrella unchecked
+                    stars[i + 1].style.display = 'inline-block'; // Muestra estrella checked
+                }
+        });
 
         commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
