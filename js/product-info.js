@@ -16,6 +16,8 @@ else
         const stars = Array.from(starContainer.getElementsByTagName('i'));
         let selectedIndex;
 
+        commentForm.reset();
+
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("listaProductos").innerHTML += `
                 <h2 class="mb-5">${productoSeleccionado.name}</h2>
