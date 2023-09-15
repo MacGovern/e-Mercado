@@ -99,8 +99,7 @@ else
 
         commentForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const d = new Date();
-            const longDateTime = d.toISOString();
+            const longDateTime = (new Date()).toISOString();
             const comment = {
                 product: parseInt(productID),
                 score: parseInt(document.querySelector('input[name="selectedScore"]:checked').value),
