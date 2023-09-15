@@ -19,7 +19,7 @@ else
         commentForm.reset();
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
-            document.getElementById("listaProductos").innerHTML += `
+            document.getElementById("productInfo").innerHTML += `
                 <h2 class="mb-5">${productoSeleccionado.name}</h2>
                 <hr>
                 <h5><strong>Precio</strong></h5>
