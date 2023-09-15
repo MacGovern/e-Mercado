@@ -11,7 +11,7 @@ else
         const listaComentarios = document.getElementById("listaComentarios");
         const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
-        let additionalComments = JSON.parse(localStorage.getItem(productID));
+        const additionalComments = JSON.parse(localStorage.getItem(productID)) || [];
         const starContainer = document.getElementById('starBtns');
         const stars = Array.from(starContainer.getElementsByTagName('i'));
         let selectedIndex;
@@ -59,7 +59,7 @@ else
                         <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars}</p>
                         <p class="mb-1">${comment.description}</p>
                     </div>
-                `;
+            `;
         }
 
         function showComments(commentsList) { // Función para mostrar los comentarios del producto seleccionado.
@@ -77,10 +77,7 @@ else
             .then(response => response.json())
             .then(productComments => {
                 showComments(productComments);
-                if (additionalComments !== null)
-                    showComments(additionalComments);
-                else
-                    additionalComments = [];
+                showComments(additionalComments);
             })
             .catch(error => console.error('Error: ', error));
 
@@ -119,5 +116,5 @@ else
             }
             showComment(comment);
             localStorage.setItem(productID, JSON.stringify(additionalComments));
-        })
+        });
     });
