@@ -7,14 +7,14 @@ else
         let navItems = nav.getElementsByClassName("nav-item");
         let ultimoNav = navItems[navItems.length - 1];
         ultimoNav.innerHTML = `
-        <div class="dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">${email}</a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                <li><a class="dropdown-item" href="#">X</a></li>
-                <li><a class="dropdown-item" href="#">X</a></li>
-                <li><a class="dropdown-item" href="#">X</a></li>
-            </ul>
-        </div>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">${email}</a>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">X</a></li>
+                    <li><a class="dropdown-item" href="#">X</a></li>
+                    <li><a class="dropdown-item" href="#">X</a></li>
+                </ul>
+            </div>
         `;
 
     });
