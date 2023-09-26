@@ -66,6 +66,22 @@ else
             `;
         }
 
+        function showRelatedProducts(productoSeleccionado) { // Función para mostrar los productos relacionados.
+            productoSeleccionado.relatedProducts.forEach(relatedProduct => {
+                document.getElementById("relatedProducts").innerHTML += `
+                    <div class="mt-3 col-4">
+                        <div class="card mb-2 shadow-sm custom-card cursor-active">
+                            <img src="${relatedProduct.image}"
+                                alt="Imagen representativa del producto relacionado" class="m-2">
+                            <h6 class="mt-1 mb-3 text-center">${relatedProduct.name}</h6>
+                        </div>
+                    </div>
+                `;
+            });
+        }        
+
+
+
         function showComment(comment) { // Función para mostrar un comentario del producto seleccionado.
             let stars = "";
             for (let i = 1; i <= comment.score; i++)
@@ -88,7 +104,10 @@ else
 
         fetch(`https://japceibal.github.io/emercado-api/products/${productID}.json`)
             .then(response => response.json())
-            .then(productoSeleccionado => showProductInfo(productoSeleccionado))
+            .then(productoSeleccionado => {
+                showProductInfo(productoSeleccionado)
+                showRelatedProducts(productoSeleccionado)
+            })
             .catch(error => console.error('Error: ', error));
 
         fetch(`https://japceibal.github.io/emercado-api/products_comments/${productID}.json`)
