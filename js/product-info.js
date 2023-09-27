@@ -65,12 +65,16 @@ else
                 </div>
             `;
         }
+         function resetProductID(id) {
+            localStorage.setItem("productID", id);
+            window.location.reload();
+          }
 
         function showRelatedProducts(productoSeleccionado) { // Función para mostrar los productos relacionados.
             productoSeleccionado.relatedProducts.forEach(relatedProduct => {
                 document.getElementById("relatedProducts").innerHTML += `
                     <div class="mt-3 col-4">
-                        <div class="card mb-2 shadow-sm custom-card cursor-active">
+                        <div onclick= "resetProductID(${relatedProduct.id})" class="card mb-2 shadow-sm custom-card cursor-active">
                             <img src="${relatedProduct.image}"
                                 alt="Imagen representativa del producto relacionado" class="m-2">
                             <h6 class="mt-1 mb-3 text-center">${relatedProduct.name}</h6>
