@@ -3,7 +3,7 @@ if (sessionStorage.getItem("signedIn") !== "true")
 else {
     function resetProductID(id) {
         localStorage.setItem("productID", id);
-        window.location.reload();
+        window.location.reload(true);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
