@@ -1,6 +1,11 @@
 if (sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
-else
+else {
+    function resetProductID(id) {
+        localStorage.setItem("productID", id);
+        window.location.reload();
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         let email = localStorage.getItem("email");
         let nav = document.querySelector("nav.navbar");
@@ -65,16 +70,12 @@ else
                 </div>
             `;
         }
-         function resetProductID(id) {
-            localStorage.setItem("productID", id);
-            window.location.reload();
-          }
 
         function showRelatedProducts(productoSeleccionado) { // Función para mostrar los productos relacionados.
             productoSeleccionado.relatedProducts.forEach(relatedProduct => {
                 document.getElementById("relatedProducts").innerHTML += `
                     <div class="mt-3 col-4">
-                        <div onclick= "resetProductID(${relatedProduct.id})" class="card mb-2 shadow-sm custom-card cursor-active">
+                        <div onclick="resetProductID(${relatedProduct.id})" class="card mb-2 shadow-sm custom-card cursor-active">
                             <img src="${relatedProduct.image}"
                                 alt="Imagen representativa del producto relacionado" class="m-2">
                             <h6 class="mt-1 mb-3 text-center">${relatedProduct.name}</h6>
@@ -82,9 +83,7 @@ else
                     </div>
                 `;
             });
-        }        
-
-
+        }
 
         function showComment(comment) { // Función para mostrar un comentario del producto seleccionado.
             let stars = "";
@@ -158,3 +157,4 @@ else
             localStorage.setItem(productID, JSON.stringify(additionalComments));
         });
     });
+}
