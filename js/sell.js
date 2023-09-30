@@ -40,9 +40,9 @@ else{
             <div class="dropdown">
                 <button class="nav-link btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside">${email}</button>
                 <ul class="dropdown-menu dropdown-menu-dark">
-                    <li><a class="dropdown-item" href="#">Mi carrito</a></li>
-                    <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                    <li><a class="dropdown-item" href="cart.html">Mi carrito</a></li>
+                    <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
+                    <li><a class="dropdown-item" href="login.html">Cerrar sesión</a></li>
                     <li>
                         <div class="my-1 mx-3">
                             <input type="radio" class="btn-check" name="displayMode" id="lightBtn" checked>
