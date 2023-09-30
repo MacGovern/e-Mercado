@@ -189,3 +189,6 @@ a.custom-card:hover {
   color: orange;
 }
 
+#carousel {
+  width: 60%;
+}
