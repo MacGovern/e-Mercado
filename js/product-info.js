@@ -30,7 +30,8 @@ else {
                 </ul>
             </div>
         `;
-
+        
+     
         const listaComentarios = document.getElementById("listaComentarios");
         const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
@@ -156,5 +157,23 @@ else {
             showComment(comment);
             localStorage.setItem(productID, JSON.stringify(additionalComments));
         });
+        
+        const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (storedTheme === "dark") {
+            document.documentElement.setAttribute('data-theme', "dark");
+            document.getElementById("darkBtn").setAttribute("checked", true);
+            document.getElementById("lightBtn").setAttribute("checked", false);
+        }
+        document.getElementById("themeBtns").addEventListener('click', (event) => {
+            if (event.target.tagName === 'INPUT');
+            if (event.target.getAttribute("id") === "darkBtn") {
+                document.documentElement.setAttribute('data-theme', "dark");
+                localStorage.setItem('theme', "dark");
+            } else {
+                document.documentElement.removeAttribute("data-theme");
+                localStorage.removeItem("theme");
+            }
+        });
+
     });
 }
