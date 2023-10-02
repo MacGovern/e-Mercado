@@ -19,7 +19,7 @@ else {
                     <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
                     <li><a class="dropdown-item" href="login.html">Cerrar sesión</a></li>
                     <li>
-                        <div class="my-1 mx-3">
+                        <div id="themeBtns" class="my-1 mx-3">
                             <input type="radio" class="btn-check" name="displayMode" id="lightBtn" checked>
                             <label class="btn btn-outline-light me-2" for="lightBtn"><i class="fas fa-sun"></i></label>
 
@@ -29,8 +29,8 @@ else {
                     </li>
                 </ul>
             </div>
-        `;
-
+        `;        
+     
         const listaComentarios = document.getElementById("listaComentarios");
         const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
@@ -182,6 +182,25 @@ else {
             }
             showComment(comment);
             localStorage.setItem(productID, JSON.stringify(additionalComments));
+        });
+        
+        const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+        if (storedTheme) {
+            document.documentElement.setAttribute('data-theme', storedTheme);
+            if (storedTheme === "dark")
+                document.getElementById("darkBtn").checked = true;
+        }
+
+        document.getElementById("themeBtns").addEventListener('click', (event) => {
+            if (event.target.tagName === 'INPUT')
+                if (event.target.getAttribute("id") === "darkBtn") {
+                    document.documentElement.setAttribute('data-theme', "dark");
+                    localStorage.setItem('theme', "dark");
+                } else {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    localStorage.setItem('theme', "light");
+                }
         });
     });
 }

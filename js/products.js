@@ -67,7 +67,7 @@ function showData(dataArray) { // Inserta en "contenido" los productos que se le
                     <div class="col">
                         <div class="d-flex w-100 justify-content-between">
                             <h4 class="mb-1">${item.name} - ${item.currency} ${item.cost}</h4>
-                            <small class="text-muted">${item.soldCount} vendidos</small>
+                            <small class="text-body-secondary">${item.soldCount} vendidos</small>
                         </div>
                         <p class="mb-1">${item.description}</p>
                     </div>
@@ -127,7 +127,7 @@ else { // Si el usuario está logueado, hace lo siguiente:
                     <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
                     <li><a class="dropdown-item" href="login.html">Cerrar sesión</a></li>
                     <li>
-                        <div class="my-1 mx-3">
+                        <div id="themeBtns" class="my-1 mx-3">
                             <input type="radio" class="btn-check" name="displayMode" id="lightBtn" checked>
                             <label class="btn btn-outline-light me-2" for="lightBtn"><i class="fas fa-sun"></i></label>
 
@@ -140,6 +140,7 @@ else { // Si el usuario está logueado, hace lo siguiente:
     `;
     
     searchBar.value = '';
+
     fetch(`https://japceibal.github.io/emercado-api/cats_products/${localStorage.getItem("catID")}.json`)
       .then((response) => response.json())
       .then((data) => {
@@ -235,5 +236,24 @@ else { // Si el usuario está logueado, hace lo siguiente:
 
       })
       .catch(error => console.error('Error fetching data:', error));
+
+      const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+        if (storedTheme === "dark")
+            document.getElementById("darkBtn").checked = true;
+    }
+
+    document.getElementById("themeBtns").addEventListener('click', (event) => {
+        if (event.target.tagName === 'INPUT')
+            if (event.target.getAttribute("id") === "darkBtn") {
+                document.documentElement.setAttribute('data-theme', "dark");
+                localStorage.setItem('theme', "dark");
+            } else {
+                document.documentElement.setAttribute("data-theme", "light");
+                localStorage.setItem('theme', "light");
+            }
+    });
   });
 }

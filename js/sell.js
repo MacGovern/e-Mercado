@@ -10,7 +10,7 @@ let PERCENTAGE_SYMBOL = '%';
 let MSG = "FUNCIONALIDAD NO IMPLEMENTADA";
 
 //Función que se utiliza para actualizar los costos de publicación
-function updateTotalCosts(){
+function updateTotalCosts() {
     let unitProductCostHTML = document.getElementById("productCostText");
     let comissionCostHTML = document.getElementById("comissionText");
     let totalCostHTML = document.getElementById("totalCostText");
@@ -28,10 +28,10 @@ function updateTotalCosts(){
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
 
-if(sessionStorage.getItem("signedIn") !== "true")
+if (sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
-else{
-    document.addEventListener("DOMContentLoaded", function(e){
+else {
+    document.addEventListener("DOMContentLoaded", function (e) {
         let email = localStorage.getItem("email");
         let nav = document.querySelector("nav.navbar");
         let navItems = nav.getElementsByClassName("nav-item");
@@ -44,7 +44,7 @@ else{
                     <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
                     <li><a class="dropdown-item" href="login.html">Cerrar sesión</a></li>
                     <li>
-                        <div class="my-1 mx-3">
+                        <div id="themeBtns" class="my-1 mx-3">
                             <input type="radio" class="btn-check" name="displayMode" id="lightBtn" checked>
                             <label class="btn btn-outline-light me-2" for="lightBtn"><i class="fas fa-sun"></i></label>
 
@@ -55,124 +55,135 @@ else{
                 </ul>
             </div>
         `;
-        
-        document.getElementById("productCountInput").addEventListener("change", function(){
+
+        document.getElementById("productCountInput").addEventListener("change", function () {
             productCount = this.value;
             updateTotalCosts();
         });
-    
-        document.getElementById("productCostInput").addEventListener("change", function(){
+
+        document.getElementById("productCostInput").addEventListener("change", function () {
             productCost = this.value;
             updateTotalCosts();
         });
-    
-        document.getElementById("goldradio").addEventListener("change", function(){
+
+        document.getElementById("goldradio").addEventListener("change", function () {
             comissionPercentage = 0.13;
             updateTotalCosts();
         });
-        
-        document.getElementById("premiumradio").addEventListener("change", function(){
+
+        document.getElementById("premiumradio").addEventListener("change", function () {
             comissionPercentage = 0.07;
             updateTotalCosts();
         });
-    
-        document.getElementById("standardradio").addEventListener("change", function(){
+
+        document.getElementById("standardradio").addEventListener("change", function () {
             comissionPercentage = 0.03;
             updateTotalCosts();
         });
-    
-        document.getElementById("productCurrency").addEventListener("change", function(){
-            if (this.value == DOLLAR_CURRENCY)
-            {
+
+        document.getElementById("productCurrency").addEventListener("change", function () {
+            if (this.value == DOLLAR_CURRENCY) {
                 MONEY_SYMBOL = DOLLAR_SYMBOL;
-            } 
-            else if (this.value == PESO_CURRENCY)
-            {
+            }
+            else if (this.value == PESO_CURRENCY) {
                 MONEY_SYMBOL = PESO_SYMBOL;
             }
-    
+
             updateTotalCosts();
         });
-    
-    
+
+
         //Configuraciones para el elemento que sube archivos
         let dzoptions = {
-            url:"/",
+            url: "/",
             autoQueue: false
         };
-        let myDropzone = new Dropzone("div#file-upload", dzoptions);    
-    
-    
+        let myDropzone = new Dropzone("div#file-upload", dzoptions);
+
+
         //Se obtiene el formulario de publicación de producto
         let sellForm = document.getElementById("sell-info");
-    
+
         //Se agrega una escucha en el evento 'submit' que será
         //lanzado por el formulario cuando se seleccione 'Vender'.
-        sellForm.addEventListener("submit", function(e){
-    
-            e.preventDefault(); 
+        sellForm.addEventListener("submit", function (e) {
+
             e.preventDefault();
-    
+            e.preventDefault();
+
             let productNameInput = document.getElementById("productName");
             let productCategory = document.getElementById("productCategory");
             let productCost = document.getElementById("productCostInput");
             let infoMissing = false;
-    
+
             //Quito las clases que marcan como inválidos
             productNameInput.classList.remove('is-invalid');
             productCategory.classList.remove('is-invalid');
             productCost.classList.remove('is-invalid');
-    
+
             //Se realizan los controles necesarios,
             //En este caso se controla que se haya ingresado el nombre y categoría.
             //Consulto por el nombre del producto
-            if (productNameInput.value === "")
-            {
+            if (productNameInput.value === "") {
                 productNameInput.classList.add('is-invalid');
                 infoMissing = true;
             }
-            
+
             //Consulto por la categoría del producto
-            if (productCategory.value === "")
-            {
+            if (productCategory.value === "") {
                 productCategory.classList.add('is-invalid');
                 infoMissing = true;
             }
-    
+
             //Consulto por el costo
-            if (productCost.value <=0)
-            {
+            if (productCost.value <= 0) {
                 productCost.classList.add('is-invalid');
                 infoMissing = true;
             }
-            
-            if(!infoMissing)
-            {
+
+            if (!infoMissing) {
                 //Aquí ingresa si pasó los controles, irá a enviar
                 //la solicitud para crear la publicación.
-    
-                getJSONData(PUBLISH_PRODUCT_URL).then(function(resultObj){
+
+                getJSONData(PUBLISH_PRODUCT_URL).then(function (resultObj) {
                     let msgToShowHTML = document.getElementById("resultSpan");
                     let msgToShow = "";
-        
+
                     //Si la publicación fue exitosa, devolverá mensaje de éxito,
                     //de lo contrario, devolverá mensaje de error.
                     //FUNCIONALIDAD NO IMPLEMENTADA
-                    if (resultObj.status === 'ok')
-                    {
+                    if (resultObj.status === 'ok') {
                         msgToShow = MSG;
                         document.getElementById("alertResult").classList.add('alert-primary');
                     }
-                    else if (resultObj.status === 'error')
-                    {
+                    else if (resultObj.status === 'error') {
                         msgToShow = MSG;
                         document.getElementById("alertResult").classList.add('alert-primary');
                     }
-        
+
                     msgToShowHTML.innerHTML = msgToShow;
                     document.getElementById("alertResult").classList.add("show");
                 });
             }
+        });
+
+        const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+        if (storedTheme) {
+            document.documentElement.setAttribute('data-theme', storedTheme);
+            if (storedTheme === "dark")
+                document.getElementById("darkBtn").checked = true;
+        }
+
+        document.getElementById("themeBtns").addEventListener('click', (event) => {
+            if (event.target.tagName === 'INPUT')
+                if (event.target.getAttribute("id") === "darkBtn") {
+                    document.documentElement.setAttribute('data-theme', "dark");
+                    localStorage.setItem('theme', "dark");
+                } else {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    localStorage.setItem('theme', "light");
+                }
         });
     });
 }

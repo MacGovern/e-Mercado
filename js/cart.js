@@ -1,4 +1,4 @@
-if(sessionStorage.getItem("signedIn") !== "true")
+if (sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
 else
     document.addEventListener("DOMContentLoaded", () => {
@@ -14,7 +14,7 @@ else
                     <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
                     <li><a class="dropdown-item" href="login.html">Cerrar sesión</a></li>
                     <li>
-                        <div class="my-1 mx-3">
+                        <div id="themeBtns" class="my-1 mx-3">
                             <input type="radio" class="btn-check" name="displayMode" id="lightBtn" checked>
                             <label class="btn btn-outline-light me-2" for="lightBtn"><i class="fas fa-sun"></i></label>
 
@@ -25,4 +25,23 @@ else
                 </ul>
             </div>
         `;
+
+        const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+        if (storedTheme) {
+            document.documentElement.setAttribute('data-theme', storedTheme);
+            if (storedTheme === "dark")
+                document.getElementById("darkBtn").checked = true;
+        }
+
+        document.getElementById("themeBtns").addEventListener('click', (event) => {
+            if (event.target.tagName === 'INPUT')
+                if (event.target.getAttribute("id") === "darkBtn") {
+                    document.documentElement.setAttribute('data-theme', "dark");
+                    localStorage.setItem('theme', "dark");
+                } else {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    localStorage.setItem('theme', "light");
+                }
+        });
     });
