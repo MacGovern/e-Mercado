@@ -1,3 +1,5 @@
+sessionStorage.removeItem('signedIn');
+
 document.getElementById("login").addEventListener("submit", (e) => {
     localStorage.setItem("email", document.getElementById("floatingInput").value);
     e.preventDefault();

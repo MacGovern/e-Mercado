@@ -15,9 +15,9 @@ else {
             <div class="dropdown">
                 <button class="nav-link btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside">${email}</button>
                 <ul class="dropdown-menu dropdown-menu-dark">
-                    <li><a class="dropdown-item" href="#">Mi carrito</a></li>
-                    <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                    <li><a class="dropdown-item" href="cart.html">Mi carrito</a></li>
+                    <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
+                    <li><a class="dropdown-item" href="login.html">Cerrar sesión</a></li>
                     <li>
                         <div id="themeBtns" class="my-1 mx-3">
                             <input type="radio" class="btn-check" name="displayMode" id="lightBtn" checked>
@@ -54,21 +54,47 @@ else {
                 <h5><strong>Cantidad de vendidos</strong></h5>
                 <p>${productoSeleccionado.soldCount}</p>
                 <h5><strong>Imágenes ilustrativas</strong></h5>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <img src="${productoSeleccionado.images[0]}" alt="Imagen 1" class="img-fluid img-thumbnail">
+                <div id="carousel" class="carousel slide carousel-dark" data-bs-ride="carousel">
+                    <div id="btnIndicator" class="carousel-indicators">
                     </div>
-                    <div class="col-3">
-                        <img src="${productoSeleccionado.images[1]}" alt="Imagen 2" class="img-fluid img-thumbnail">
+                    <div id="imgCarousel" class="carousel-inner">
                     </div>
-                    <div class="col-3">
-                        <img src="${productoSeleccionado.images[2]}" alt="Imagen 3" class="img-fluid img-thumbnail">
-                    </div>
-                    <div class="col-3">
-                        <img src="${productoSeleccionado.images[3]}" alt="Imagen 4" class="img-fluid img-thumbnail">
-                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
             `;
+        }
+
+        function showImages(productoSeleccionado) { //Función para mostrar las imágenes en el carrusel.
+            let i = 1;
+            productoSeleccionado.images.forEach(image => {
+                if (i === 1) {
+                    document.getElementById("imgCarousel").innerHTML += `
+                        <div class="carousel-item active">
+                            <img src="${image}" class="d-block w-100" alt="Imagen ${i}">
+                        </div>
+                    `;
+                    document.getElementById("btnIndicator").innerHTML += `
+                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="${i-1}" class="active" aria-current="true" aria-label="Slide ${i}"></button>
+                    `;  
+                } else { 
+                    document.getElementById("imgCarousel").innerHTML += `
+                        <div class="carousel-item">
+                            <img src="${image}" class="d-block w-100" alt="Imagen ${i}">
+                        </div>
+                    `;
+                    document.getElementById("btnIndicator").innerHTML += `
+                    <button type="button" data-bs-target="#carousel" data-bs-slide-to="${i-1}" aria-label="Slide ${i}"></button>
+                    `; 
+                }
+                i++;
+            });
         }
 
         function showRelatedProducts(productoSeleccionado) { // Función para mostrar los productos relacionados.
@@ -109,6 +135,7 @@ else {
             .then(response => response.json())
             .then(productoSeleccionado => {
                 showProductInfo(productoSeleccionado)
+                showImages(productoSeleccionado)
                 showRelatedProducts(productoSeleccionado)
             })
             .catch(error => console.error('Error: ', error));
