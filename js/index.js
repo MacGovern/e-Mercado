@@ -25,36 +25,38 @@ else
                 </ul>
             </div>
         `;
+
         document.getElementById("autos").addEventListener("click", function () {
             localStorage.setItem("catID", 101);
             window.location = "products.html"
         });
+
         document.getElementById("juguetes").addEventListener("click", function () {
             localStorage.setItem("catID", 102);
             window.location = "products.html"
         });
+
         document.getElementById("muebles").addEventListener("click", function () {
             localStorage.setItem("catID", 103);
             window.location = "products.html"
         });
 
         const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-        if (storedTheme === "dark") {
-            document.documentElement.setAttribute('data-theme', "dark");
-            document.getElementById("darkBtn").setAttribute("checked", true);
-            document.getElementById("lightBtn").setAttribute("checked", false);
+
+        if (storedTheme) {
+            document.documentElement.setAttribute('data-theme', storedTheme);
+            if (storedTheme === "dark")
+                document.getElementById("darkBtn").checked = true;
         }
+
         document.getElementById("themeBtns").addEventListener('click', (event) => {
-            if (event.target.tagName === 'INPUT');
-            if (event.target.getAttribute("id") === "darkBtn") {
-                document.documentElement.setAttribute('data-theme', "dark");
-                localStorage.setItem('theme', "dark");
-            } else {
-                document.documentElement.removeAttribute("data-theme");
-                localStorage.removeItem("theme");
-            }
+            if (event.target.tagName === 'INPUT')
+                if (event.target.getAttribute("id") === "darkBtn") {
+                    document.documentElement.setAttribute('data-theme', "dark");
+                    localStorage.setItem('theme', "dark");
+                } else {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    localStorage.setItem('theme', "light");
+                }
         });
-
     });
-
-

@@ -56,7 +56,6 @@ else {
             </div>
         `;
 
-
         document.getElementById("productCountInput").addEventListener("change", function () {
             productCount = this.value;
             updateTotalCosts();
@@ -167,22 +166,24 @@ else {
                 });
             }
         });
-        const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-        if (storedTheme === "dark") {
-            document.documentElement.setAttribute('data-theme', "dark");
-            document.getElementById("darkBtn").setAttribute("checked", true);
-            document.getElementById("lightBtn").setAttribute("checked", false);
-        }
-        document.getElementById("themeBtns").addEventListener('click', (event) => {
-            if (event.target.tagName === 'INPUT');
-            if (event.target.getAttribute("id") === "darkBtn") {
-                document.documentElement.setAttribute('data-theme', "dark");
-                localStorage.setItem('theme', "dark");
-            } else {
-                document.documentElement.removeAttribute("data-theme");
-                localStorage.removeItem("theme");
-            }
-        });
 
+        const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+        if (storedTheme) {
+            document.documentElement.setAttribute('data-theme', storedTheme);
+            if (storedTheme === "dark")
+                document.getElementById("darkBtn").checked = true;
+        }
+
+        document.getElementById("themeBtns").addEventListener('click', (event) => {
+            if (event.target.tagName === 'INPUT')
+                if (event.target.getAttribute("id") === "darkBtn") {
+                    document.documentElement.setAttribute('data-theme', "dark");
+                    localStorage.setItem('theme', "dark");
+                } else {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    localStorage.setItem('theme', "light");
+                }
+        });
     });
 }
