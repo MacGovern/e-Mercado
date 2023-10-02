@@ -176,17 +176,17 @@ html[data-theme='dark'] {
 
 a {
   color: var(--bs-link-color);
-  transition: .4s;
+  /* transition: .4s; */
 }
 
 body {
   color: var(--bs-secondary-text-emphasis);
-  transition: .4s;
+  /* transition: .4s; */
 }
 
 body, .card {
   background-color: var(--bs-body-bg);
-  transition: .4s;
+  /* transition: .4s; */
 }
 
 .list-group-item {
