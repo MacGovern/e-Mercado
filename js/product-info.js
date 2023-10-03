@@ -43,7 +43,14 @@ else {
 
         function showProductInfo(productoSeleccionado) { // Función para mostrar la información del producto seleccionado.
             document.getElementById("productInfo").innerHTML += `
-                <h2 class="mb-5">${productoSeleccionado.name}</h2>
+                <div class="row mb-5">
+                    <div class="col-8 col-sm-7 col-md-8 col-lg-9 col-xl-10">
+                        <h2>${productoSeleccionado.name}</h2>
+                    </div>
+                    <div class="text-center col-4 col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                        <button type="button" id="boton-comprar" class="btn btn-success">Comprar</button>
+                    </div>
+                </div>
                 <hr>
                 <h5><strong>Precio</strong></h5>
                 <p>${productoSeleccionado.currency} ${productoSeleccionado.cost}</p>
