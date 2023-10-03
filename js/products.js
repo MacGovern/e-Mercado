@@ -59,9 +59,9 @@ function showData(dataArray) { // Inserta en "contenido" los productos que se le
   contenido.innerHTML = '';
   for (const item of dataArray) {
     contenido.innerHTML += `
-            <div onclick="setProductID(${item.id})"class="list-group-item list-group-item-action cursor-active">
+            <div onclick="setProductID(${item.id})" class="list-group-item list-group-item-action cursor-active">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-3 d-flex align-items-center">
                         <img src="${item.image}" alt="Imagen del producto" class="img-thumbnail">
                     </div>
                     <div class="col">
