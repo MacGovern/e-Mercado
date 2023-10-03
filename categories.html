@@ -47,22 +47,22 @@
         <div class="row">
           <div class="col-lg-6 col-md-12">
             <div class="row p-0 m-0">
-              <div class="col-md-auto g-0">
-                <p class="font-weight-normal my-2">Cant.</p>
+              <div class="col-auto g-0 me-2">
+                <p class="font-weight-normal my-2">Precio</p>
               </div>
-              <div class="col">
-                <input class="form-control" type="number" placeholder="min." id="rangeFilterCountMin" min="0">
+              <div class="col-sm-3 mb-3 mb-lg-0 g-0">
+                <input class="form-control" type="number" placeholder="min." id="rangeFilterMin" min="0">
               </div>
-              <div class="col-md-auto g-0">
-                <p class="font-weight-normal text-end my-2">—</p>
+              <div class="col-auto d-none d-sm-block">
+                <p class="font-weight-normal text-center my-2">—</p>
               </div>
-              <div class="col">
-                <input class="form-control" type="number" placeholder="máx." id="rangeFilterCountMax" min="0">
+              <div class="col-sm-3 mb-3 mb-lg-0 g-0">
+                <input class="form-control" type="number" placeholder="máx." id="rangeFilterMax" min="0">
               </div>
-              <div class="col-3 p-0">
+              <div class="col-sm col-3 px-0 px-sm-2">
                 <div class="btn-group" role="group">
-                  <button class="btn btn-light btn-block" id="rangeFilterCount">Filtrar</button>
-                  <button class="btn btn-link btn-sm" id="clearRangeFilter">Limpiar</button>
+                  <button class="btn btn-light btn-block" id="rangeFilterBtn">Filtrar</button>
+                  <button class="btn btn-link btn-sm" id="clearRangeFilterBtn">Limpiar</button>
                 </div>
               </div>
             </div>
@@ -86,13 +86,17 @@
       </div>
     </div>
   </main>
-  <footer class="text-muted">
-    <div class="container">
-      <p class="float-end">
-        <a href="#">Volver arriba</a>
-      </p>
-      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a>
-      </p>
+  <footer class="text-muted container">
+    <div class="row d-flex justify-content-between">
+      <div class="col-12 col-sm-auto text-center mb-3">
+        <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a>
+        </p>
+      </div>
+      <div class="col-12 col-sm-auto text-center">
+        <p>
+          <a href="#">Volver arriba</a>
+        </p>
+      </div>
     </div>
   </footer>
   <div id="spinner-wrapper">
