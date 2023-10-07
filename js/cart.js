@@ -45,3 +45,10 @@ else
                 }
         });
     });
+
+    fetch(`https://japceibal.github.io/emercado-api/user_cart/25801.json`)
+            .then(response => response.json())
+            .then(cart => {
+                console.log(cart.articles); // cart.articles devuelve un arreglo de los articulos del carrito de compras.
+            })
+            .catch(error => console.error('Error: ', error));
