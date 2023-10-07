@@ -45,3 +45,10 @@ else
                 }
         });
     });
+
+    fetch(`https://japceibal.github.io/emercado-api/cart/buy/25801.json`)
+            .then(response => response.json())
+            .then({
+                
+            })
+            .catch(error => console.error('Error: ', error));
