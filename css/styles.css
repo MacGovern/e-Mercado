@@ -397,12 +397,12 @@ a.custom-card:hover {
   width: 60%;
 }
 
-.img-fluid {
-  width: 300px;
+.img-thumbnail {
+  width: 130px;
   max-width: 100%;
   height: auto; 
 }
 
 input[type="number"] {
-  width: 70px;
+  width: 60px;
 }
