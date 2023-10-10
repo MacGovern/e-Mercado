@@ -55,22 +55,30 @@ else
             const cartContainer = document.getElementById('cart-container');
       
             cart.articles.forEach(article => {
-              const articleHTML = `
-                <div class="row">
-                  <div class="col-md-3"></div>
-                  <div class="col-md-2"><strong>${article.name}</strong></div>
-                  <div class="col-md-2"><strong>${article.unitCost} ${article.currency}</strong></div>
-                  <div class="col-md-2"><strong>${article.count}</strong></div>
-                  <div class="col-md-2"><strong>${article.unitCost * article.count} ${article.currency}</strong></div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <img src="${article.image}" alt="Producto" class="img-fluid">
+                const articleHTML = `
+                  <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-2"><strong>Nombre</strong></div>
+                    <div class="col-md-2"><strong>Costo</strong></div>
+                    <div class="col-md-2"><strong>Cantidad</strong></div>
+                    <div class="col-md-2"><strong>Subtotal</strong></div>
                   </div>
-                </div>
-                <hr class="bg-dark my-4">
-              `;
-      
+                  <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-2"><strong>${article.name}</strong></div>
+                    <div class="col-md-2"><strong>${article.unitCost} ${article.currency}</strong></div>
+                    <div class="col-md-2">
+                      <input type="number" id="cantidad-${article.id}" value="${article.count}" min="1" step="1">
+                    </div>
+                    <div class="col-md-2"><strong>${article.unitCost * article.count} ${article.currency}</strong></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <img src="${article.image}" alt="Producto" class="img-fluid">
+                    </div>
+                  </div>
+                  <hr class="bg-dark my-4">
+                `;
               cartContainer.innerHTML += articleHTML;
             });
           })
