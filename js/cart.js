@@ -47,13 +47,13 @@ else
     });
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch(`https://japceibal.github.io/emercado-api/user_cart/25801.json`)
-          .then(response => response.json())
-          .then(cart => {
+document.addEventListener('DOMContentLoaded', function () {
+    fetch(`https://japceibal.github.io/emercado-api/user_cart/25801.json`)
+        .then(response => response.json())
+        .then(cart => {
             console.log(cart);
             const cartContainer = document.getElementById('cart-container');
-      
+
             cart.articles.forEach(article => {
                 const articleHTML = `
                 <div class="row">
@@ -66,7 +66,7 @@ else
             <hr class="custom-hr">
             
             <div class="row">
-                <div class="col-md-2">
+                <div id="imagen-cart" class="col-md-2">
                     <img src="${article.image}" alt="Producto" class="img-thumbnail">
                 </div>
                 <div class="col-md-2 mt-3">
@@ -76,7 +76,7 @@ else
                     <p>${article.currency} ${article.unitCost}</p>
                 </div>
                 <div class="col-md-2 mt-3">
-                <input type="number" id="cantidad-${article.id}" value="${article.count}" min="1">
+                <input type="number" id="cantidad-${article.id}" value="${article.count}" min="1" style="width: 30%;">
                 </div>
                 <div class="col-md-2 mt-3">
                     <strong>  ${article.currency} ${article.unitCost * article.count}</strong>
@@ -86,9 +86,8 @@ else
             
             
                 `;
-              cartContainer.innerHTML += articleHTML;
+                cartContainer.innerHTML += articleHTML;
             });
-          })
-          .catch(error => console.error('Error: ', error));
-      });
-      
+        })
+        .catch(error => console.error('Error: ', error));
+});
