@@ -63,7 +63,7 @@ else
                 <div class="col-md-2"><strong>Cantidad</strong></div>
                 <div class="col-md-2"><strong>Subtotal</strong></div>
             </div>
-            <hr class="bg-black mb-2 my-2">
+            <hr class="custom-hr">
             
             <div class="row">
                 <div class="col-md-2">
