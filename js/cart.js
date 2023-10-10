@@ -45,3 +45,35 @@ else
                 }
         });
     });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch(`https://japceibal.github.io/emercado-api/user_cart/25801.json`)
+          .then(response => response.json())
+          .then(cart => {
+            console.log(cart);
+            const cartContainer = document.getElementById('cart-container');
+      
+            cart.articles.forEach(article => {
+              const articleHTML = `
+                <div class="row">
+                  <div class="col-md-3"></div>
+                  <div class="col-md-2"><strong>${article.name}</strong></div>
+                  <div class="col-md-2"><strong>${article.unitCost} ${article.currency}</strong></div>
+                  <div class="col-md-2"><strong>${article.count}</strong></div>
+                  <div class="col-md-2"><strong>${article.unitCost * article.count} ${article.currency}</strong></div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img src="${article.image}" alt="Producto" class="img-fluid">
+                  </div>
+                </div>
+                <hr class="bg-dark my-4">
+              `;
+      
+              cartContainer.innerHTML += articleHTML;
+            });
+          })
+          .catch(error => console.error('Error: ', error));
+      });
+      

@@ -396,3 +396,8 @@ a.custom-card:hover {
 #carousel {
   width: 60%;
 }
+
+.img-fluid {
+  width: 200px;
+  height: auto; 
+}
