@@ -69,16 +69,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div id="imagen-cart" class="col-md-2">
                     <img src="${article.image}" alt="Producto" class="img-thumbnail">
                 </div>
-                <div class="col-md-2 mt-3">
+                <div class="col-md-2 mt-3 text-end">
                     <p>${article.name}</p>
                 </div>
-                <div class="col-md-2 mt-3">
+                <div class="col-md-2 mt-3 text-end">
                     <p>${article.currency} ${article.unitCost}</p>
                 </div>
-                <div class="col-md-2 mt-3">
+                <div class="col-md-2 mt-3 text-end">
                 <input type="number" id="cantidad-${article.id}" value="${article.count}" min="1" style="width: 30%;">
                 </div>
-                <div class="col-md-2 mt-3">
+                <div class="col-md-2 mt-3 text-end">
                     <strong>  ${article.currency} ${article.unitCost * article.count}</strong>
                 </div>
             </div>
