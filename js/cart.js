@@ -45,7 +45,6 @@ else
                 }
         });
     });
- estructuraCarritoDeCompras
 
 document.addEventListener('DOMContentLoaded', function () {
     fetch(`https://japceibal.github.io/emercado-api/user_cart/25801.json`)
