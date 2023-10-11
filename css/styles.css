@@ -396,15 +396,3 @@ a.custom-card:hover {
 #carousel {
   width: 60%;
 }
-
-#imagen-cart{
-  width: 130px;
-  max-width: 100%;
-  height: auto; 
-}
-
-.custom-hr {
-  background-color: black; 
-  opacity: 1; 
-  margin-bottom: 2px; 
-}

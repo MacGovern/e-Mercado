@@ -9,6 +9,21 @@
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/font-awesome.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
+
+  <style>
+    @media (max-width: 575px) {
+
+      #colNoImage,
+      #colImage {
+        flex: 0 0 108px;
+      }
+
+      .rowNoImage,
+      .rowImage {
+        flex: 0 0 126px;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -35,56 +50,16 @@
       </div>
     </div>
   </nav>
-  <div class="container">
-    <h2>Carrito de Compras</h2>
-    <div id="cart-container" class="row">
-      <div class="col-md-12">
-        <h3 class="mt-4">Artículos a Comprar</h3>
-      </div>
-    </div>
-  </div>
-  
-    
-      <div class="container">
-      <h3 class="mb-3">Tipo de envío</h3>
-      <form>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" id="premium" name="tipoDeEnvio" checked />
-          <label class="form-check-label" for="premium">Premium - 2 a 5 días (15%)</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" id="express" name="tipoDeEnvio" />
-          <label class="form-check-label" for="express">Express - 5 a 8 días (7%)</label>
-        </div>
-        <div class="form-check mb-4">
-          <input class="form-check-input" type="radio" id="standard" name="tipoDeEnvio" />
-          <label class="form-check-label" for="standard">Standard - 12 a 15 días (5%)</label>
-        </div>
 
-        <h3 class="mb-3">Dirección de envío</h3>
-        <div class="row">
-          <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4 mb-3">
-            <label class="form-label" for="calle">Calle</label>
-            <input type="text" class="form-control" id="calle" />
-          </div>
-          <div class="col-sm-9 col-md-5 col-lg-4 col-xxl-3 mb-3">
-            <label class="form-label" for="numero">Número</label>
-            <input type="text" class="form-control" id="numero" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4 mb-3">
-            <label class="form-label" for="esquina">Esquina</label>
-            <input type="text" class="form-control" id="esquina" />
-          </div>
-        </div>
-      </form>
-      <hr>
+  <main class="container" id="cartContent">
+    <h2 class="text-center p-4">Carrito de Compras</h2>
   </main>
+
   <footer class="text-muted container">
     <div class="row d-flex justify-content-between">
       <div class="col-12 col-sm-auto text-center mb-3">
-        <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a>
+        <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a
+            Programar</a>
         </p>
       </div>
       <div class="col-12 col-sm-auto text-center">
@@ -102,7 +77,7 @@
       <div></div>
     </div>
   </div>
-</div>
+  </div>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/cart.js"></script>
