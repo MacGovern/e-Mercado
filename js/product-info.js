@@ -144,8 +144,20 @@ else {
                 showProductInfo(productoSeleccionado)
                 showImages(productoSeleccionado)
                 showRelatedProducts(productoSeleccionado)
+                agregarCompraAlCarrito(productoSeleccionado)
             })
             .catch(error => console.error('Error: ', error));
+
+            function agregarCompraAlCarrito(productoSeleccionado) {
+                const btnComprar = document.getElementById("boton-comprar");
+                const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+                btnComprar.addEventListener("click", () => {
+                    carrito.push(productoSeleccionado);
+                    localStorage.setItem("carrito", JSON.stringify(carrito));
+                    alert('Compra realizada con exito!') 
+                });
+            }
 
         fetch(`https://japceibal.github.io/emercado-api/products_comments/${productID}.json`)
             .then(response => response.json())

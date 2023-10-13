@@ -100,8 +100,55 @@ else
                         else
                             cartContent.innerHTML += '<hr style="opacity: 1;" class="mb-4">';
                     });
+
+
+                    const comprasRealizadas = JSON.parse(localStorage.getItem("carrito"));
+                    const idsUnicos = {};
+                    const comprasSinDuplicados = comprasRealizadas.filter(compra => {
+                        if (!idsUnicos[compra.id]) {
+                            idsUnicos[compra.id] = true;
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    comprasSinDuplicados.forEach((compra, index) => {
+                        let cantidad = 0;
+                        
+                        comprasRealizadas.map((prod) => {
+                            if (prod.id === compra.id) {
+                                cantidad++;
+                            }
+                        })
+
+                        cartContent.innerHTML += `
+                                <div class="row d-flex align-items-center flex-nowrap">
+                                    <div class="col col-lg-2 me-lg-3 me-xl-4 me-xxl-5" id="colImage">
+                                        <img src="${compra.images[0]}" alt="Producto" class="img-thumbnail">
+                                    </div>
+                                    <div class="col rowImage">
+                                        <span>${compra.name}</span>
+                                    </div>
+                                    <div class="col rowImage">
+                                        <span>${compra.currency} ${compra.cost}</span>
+                                    </div>
+                                    <div class="col rowImage">
+                                        <input type="number" data-articleID ="${compra.id}" value="${cantidad}" min="1" style="width: 51px;">
+                                    </div>
+                                    <div class="col rowImage">
+                                        <strong data-articleID ="${compra.id}"> ${compra.currency} ${cantidad * compra.cost}</strong>
+                                    </div>
+                                </div>
+                            `;
+
+                            if (index !== comprasSinDuplicados.length - 1)
+                                cartContent.innerHTML += '<hr>';
+                            else
+                                cartContent.innerHTML += '<hr style="opacity: 1;" class="mb-4">'; 
+                    });
+
+
                     cartContent.innerHTML += `
-                        <hr>
                         <h3 class="my-4">Tipo de envío</h3>
                         <form>
                           <div class="form-check">
