@@ -85,12 +85,12 @@ else
                                     <span>${article.name}</span>
                                 </div>
                                 <div class="col rowImage">
-                                    <span>${article.currency} ${article.unitCost}</span>
+                                    <span id="currency-${article.id}">${article.currency}</span> <span id="unitCost-${article.id}">${article.unitCost}</span>
                                 </div>
                                 <div class="col rowImage">
-                                    <input type="number" data-articleID ="${article.id}" value="${article.count}" min="1" style="width: 51px;">
+                                    <input id="inputCount-${article.id}" type="number" data-articleID ="${article.id}" value="${article.count}" min="1" style="width: 51px;" oninput="subtotalArticle(${article.id})">
                                 </div>
-                                <div class="col rowImage">
+                                <div id="subtotal-${article.id}" class="col rowImage">
                                     <strong data-articleID ="${article.id}"> ${article.currency} ${article.unitCost * article.count}</strong>
                                 </div>
                             </div>
@@ -141,3 +141,13 @@ else
             })
             .catch(error => console.error('Error: ', error));
     });
+
+
+    function subtotalArticle(articleId){ // Función para calcular el subtotal de un artículo
+        let count = document.getElementById("inputCount-" + articleId).value; 
+        let currency = document.getElementById("currency-" + articleId).innerHTML;
+        let unitCost = document.getElementById("unitCost-" + articleId).innerHTML;
+        document.getElementById("subtotal-" + articleId).innerHTML = `
+        <strong data-articleID ="${articleId}"> ${currency} ${parseInt(count) * parseFloat(unitCost)}</strong>
+        `
+    };
