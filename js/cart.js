@@ -88,10 +88,10 @@ else
                                     <span>${article.currency} ${article.unitCost}</span>
                                 </div>
                                 <div class="col rowImage">
-                                    <input type="number" data-articleID ="${article.id}" value="${article.count}" min="1" style="width: 51px;">
+                                    <input type="number" value="${article.count}" min="1" style="width: 51px;" data-articleID="${article.id}" data-articleCount="${article.count}" onchange="updateSubtotal(this)">
                                 </div>
                                 <div class="col rowImage">
-                                    <strong data-articleID ="${article.id}"> ${article.currency} ${article.unitCost * article.count}</strong>
+                                    <strong> ${article.currency} <span id="${article.id}" data-articleUnitCost="${article.unitCost}">${article.unitCost * article.count}</span></strong>
                                 </div>
                             </div>
                         `;
@@ -141,3 +141,21 @@ else
             })
             .catch(error => console.error('Error: ', error));
     });
+
+let flag = true;
+let originalValue;
+
+function updateSubtotal(inputElement) { // Función para recalcular el subtotal de un artículo.
+    if (flag) {
+        originalValue = inputElement.getAttribute('data-articleCount');
+        flag = false;
+    }
+    
+    if (inputElement.value < 1)
+        inputElement.value = originalValue;
+    else
+        originalValue = inputElement.value;
+
+    const subtotal = document.getElementById(inputElement.getAttribute('data-articleID'));
+    subtotal.textContent = subtotal.getAttribute('data-articleUnitCost') * inputElement.value;
+}
