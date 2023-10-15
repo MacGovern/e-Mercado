@@ -143,6 +143,7 @@ else
     });
 
 
+<<<<<<< Updated upstream
     function subtotalArticle(articleId){ // Función para calcular el subtotal de un artículo
         let count = document.getElementById("inputCount-" + articleId).value; 
         let currency = document.getElementById("currency-" + articleId).innerHTML;
@@ -151,3 +152,15 @@ else
         <strong data-articleID ="${articleId}"> ${currency} ${parseInt(count) * parseFloat(unitCost)}</strong>
         `
     };
+=======
+function updateSubtotal(inputElement) { // Función para recalcular el subtotal de un artículo.
+    if (inputElement.value < 1) {
+        let originalValue = inputElement.getAttribute('data-articleCount');
+        inputElement.value = originalValue;
+    } else
+        originalValue = inputElement.value;
+
+    const subtotal = document.getElementById(inputElement.getAttribute('data-articleID'));
+    subtotal.textContent = subtotal.getAttribute('data-articleUnitCost') * inputElement.value;
+}
+>>>>>>> Stashed changes
