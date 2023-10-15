@@ -145,7 +145,7 @@ else
 let originalValue;
 
 function updateOriginalValue(value) {
-        originalValue = value;
+    originalValue = value;
 }
 
 function updateSubtotal(inputElement, id) { // Función para recalcular el subtotal de un artículo.
