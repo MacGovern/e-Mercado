@@ -1,6 +1,13 @@
 if (sessionStorage.getItem("signedIn") !== "true")
     window.location.href = "login.html";
-else
+else {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    //const cartAndCartFromAPI = [...cart];
+    //const placeHolder = [];
+    //const cartAndCartFromAPI = placeHolder.concat(cart);
+    //console.log('cart', cart);
+    //console.log('cartAndCartFromAPI', cartAndCartFromAPI);
+
     document.addEventListener("DOMContentLoaded", () => {
         let email = localStorage.getItem("email");
         let nav = document.querySelector("nav.navbar");
@@ -45,10 +52,38 @@ else
                 }
         });
 
+        function addToCart(article) {
+            let index = 0;
+
+            while (index < cart.length && article.id !== cart[index].id)
+                index++;
+
+            if (index >= cart.length){
+                cart.push({
+                    id: article.id,
+                    name: article.name,
+                    count: article.count,
+                    unitCost: article.unitCost,
+                    currency: article.currency,
+                    image: article.image
+                });
+            } //else {
+                //cart[index].count = parseInt(cart[index].count) + article.count;
+            //}
+            localStorage.setItem('cart', JSON.stringify(cart));
+            cart = JSON.parse(localStorage.getItem('cart'));
+        }
+
         fetch(`https://japceibal.github.io/emercado-api/user_cart/25801.json`)
             .then(response => response.json())
-            .then(cart => {
-                if (cart.articles.length === 0)
+            .then(userCartFromAPI => {
+                if(localStorage.getItem('userCartFromAPI_fetchFlag') || true){
+                    //console.log('entro. Solo deberia aparecer una vez')
+                    userCartFromAPI.articles.forEach(article => addToCart(article));
+                    localStorage.setItem('userCartFromAPI_fetchCounter', false)
+                }
+                
+                if (cart.length === 0)
                     document.getElementById('cartContent').innerHTML += `
                         <p class="lead my-4">Actualmente no tiene ningún artículo seleccionado.</p>
                     `;
@@ -75,7 +110,7 @@ else
                         </div>
                         <hr style="opacity: 1;">
                     `;
-                    cart.articles.forEach((article, index) => {
+                    cart.forEach((article, index) => {
                         cartContent.innerHTML += `                        
                             <div class="row d-flex align-items-center flex-nowrap">
                                 <div class="col col-lg-2 me-lg-3 me-xl-4 me-xxl-5" id="colImage">
@@ -95,7 +130,7 @@ else
                                 </div>
                             </div>
                         `;
-                        if (index !== cart.articles.length - 1)
+                        if (index !== cart.length - 1)
                             cartContent.innerHTML += '<hr>';
                         else
                             cartContent.innerHTML += '<hr style="opacity: 1;" class="mb-4">';
@@ -136,23 +171,53 @@ else
                           </div>
                         </form>
                         <hr>
-                        `;
+                    `;
                 }
             })
             .catch(error => console.error('Error: ', error));
     });
 
-let originalValue;
+    let originalValue;
 
-function updateOriginalValue(value) {
+    function updateOriginalValue(value) {
         originalValue = value;
-}
+    }
 
-function updateSubtotal(inputElement, id) { // Función para recalcular el subtotal de un artículo.
-    if (inputElement.value < 1)
-        inputElement.value = originalValue;
-    else {
-        const subtotal = document.getElementById(id);
-        subtotal.textContent = subtotal.getAttribute('data-articleUnitCost') * inputElement.value;
+    // function addToCart(article) {
+    //     let index = 0;
+
+    //     while (index < (JSON.parse(localStorage.getItem('cart') || [])).length && article.id !== (JSON.parse(localStorage.getItem('cart') || []))[index].id)
+    //         index++;
+
+    //     if (index < (JSON.parse(localStorage.getItem('cart') || [])).length)
+    //     (JSON.parse(localStorage.getItem('cart') || []))[index].count = article.count;
+    //     else
+    //         (JSON.parse(localStorage.getItem('cart') || [])).push({
+    //             id: article.id,
+    //             name: article.name,
+    //             count: article.count,
+    //             unitCost: article.unitCost,
+    //             currency: article.currency,
+    //             image: article.image
+    //         });
+    // }
+
+    function updateSubtotal(inputElement, id) { // Función para recalcular el subtotal de un artículo.
+        if (inputElement.value < 1)
+            inputElement.value = originalValue;
+        else {
+            const subtotal = document.getElementById(id);
+            const value = inputElement.value
+            subtotal.textContent = subtotal.getAttribute('data-articleUnitCost') * value;
+
+            let index = 0;
+
+            while (index < cart.length && id !== cart[index].id)
+                index++;
+
+            cart[index].count = value;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            cart = JSON.parse(localStorage.getItem('cart'));
+        }
     }
 }

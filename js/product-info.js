@@ -29,12 +29,13 @@ else {
                     </li>
                 </ul>
             </div>
-        `;        
-     
+        `;
+
         const listaComentarios = document.getElementById("listaComentarios");
         const productID = localStorage.getItem('productID');
         const commentForm = document.getElementById('commentForm');
         const additionalComments = JSON.parse(localStorage.getItem(productID)) || [];
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const starContainer = document.getElementById('starBtns');
         const stars = Array.from(starContainer.getElementsByTagName('i'));
         let selectedIndex;
@@ -88,17 +89,17 @@ else {
                         </div>
                     `;
                     document.getElementById("btnIndicator").innerHTML += `
-                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="${i-1}" class="active" aria-current="true" aria-label="Slide ${i}"></button>
-                    `;  
-                } else { 
+                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="${i - 1}" class="active" aria-current="true" aria-label="Slide ${i}"></button>
+                    `;
+                } else {
                     document.getElementById("imgCarousel").innerHTML += `
                         <div class="carousel-item">
                             <img src="${image}" class="d-block w-100" alt="Imagen ${i}">
                         </div>
                     `;
                     document.getElementById("btnIndicator").innerHTML += `
-                    <button type="button" data-bs-target="#carousel" data-bs-slide-to="${i-1}" aria-label="Slide ${i}"></button>
-                    `; 
+                    <button type="button" data-bs-target="#carousel" data-bs-slide-to="${i - 1}" aria-label="Slide ${i}"></button>
+                    `;
                 }
                 i++;
             });
@@ -138,12 +139,38 @@ else {
             });
         }
 
+        function addToCart(product) {
+            let index = 0;
+
+            while (index < cart.length && product.id !== cart[index].id)
+                index++;
+
+            if (index < cart.length && product.id === cart[index].id)
+                cart[index].count++;
+            else
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    count: 1,
+                    unitCost: product.cost,
+                    currency: product.currency,
+                    image: product.images[0]
+                });
+
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('¡Artículo agregado al carrito de compras!');
+        }
+
         fetch(`https://japceibal.github.io/emercado-api/products/${productID}.json`)
             .then(response => response.json())
             .then(productoSeleccionado => {
-                showProductInfo(productoSeleccionado)
-                showImages(productoSeleccionado)
-                showRelatedProducts(productoSeleccionado)
+                showProductInfo(productoSeleccionado);
+                showImages(productoSeleccionado);
+                showRelatedProducts(productoSeleccionado);
+                document.getElementById('boton-comprar').addEventListener('click', () => {
+                    addToCart(productoSeleccionado);
+                });
             })
             .catch(error => console.error('Error: ', error));
 
@@ -190,7 +217,7 @@ else {
             showComment(comment);
             localStorage.setItem(productID, JSON.stringify(additionalComments));
         });
-        
+
         const storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 
         if (storedTheme) {
