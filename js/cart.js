@@ -17,9 +17,9 @@ else {
         const shippingForm = document.getElementById("shippingForm");
         const tipoDeEnvio = parseFloat(shippingForm.querySelector('input[name="tipoDeEnvio"]:checked').value);
         let costoEnvio = tipoDeEnvio * subtotal;
-        document.getElementById("subtotalCosto").textContent = `$${subtotal.toFixed(0)}`;
-        document.getElementById("costoEnvio").textContent = `$${costoEnvio.toFixed(0)}`;
-        document.getElementById("totalCosto").textContent = `$${(subtotal + costoEnvio).toFixed(0)}`;
+        document.getElementById("subtotalCosto").textContent = `${subtotal.toFixed(0)}`;
+        document.getElementById("costoEnvio").textContent = `${costoEnvio.toFixed(0)}`;
+        document.getElementById("totalCosto").textContent = `${(subtotal + costoEnvio).toFixed(0)}`;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
