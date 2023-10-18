@@ -184,7 +184,41 @@ else {
                             </div>
                           </div>
                         </form>
+
                         <hr>
+                        <div class="mt-4" id="infoCost">
+                        <div>
+                            <h2 class="mb-4">Costos</h2>
+                        </div>
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                <h5>Subtotal general</h5>
+                                <div>
+                                <span>USD</span>
+                                <span id="subtotalCosto"></span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5>Costo de envío</h5>
+                                <div>
+                                <span>USD</span>
+                                <span id="costoEnvio"></span>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5>Total</h5>
+                                <div>
+                                <strong>USD</strong>
+                                <strong id="totalCosto"></strong>
+                                </div>
+                            </div>
+                            </div>
+                        <hr class="mt-5">
+                        </div>
                     `;
                     const shippingForm = document.getElementById("shippingForm");
                     shippingForm.addEventListener("change", function () {
