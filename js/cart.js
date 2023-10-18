@@ -9,13 +9,12 @@ else {
     //console.log('cartAndCartFromAPI', cartAndCartFromAPI);
 
     function displayCosts(cart) {
-        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = JSON.parse(localStorage.getItem('cart'));
         let subtotal = 0;
         cart.forEach(article => {
             subtotal += article.count * article.unitCost;
         });
-        const shippingForm = document.getElementById("shippingForm");
-        const tipoDeEnvio = parseFloat(shippingForm.querySelector('input[name="tipoDeEnvio"]:checked').value);
+        const tipoDeEnvio = parseFloat(document.getElementById("tipoDeEnvio").querySelector('input[name="tipoDeEnvio"]:checked').value);
         let costoEnvio = tipoDeEnvio * subtotal;
         document.getElementById("subtotalCosto").textContent = `${subtotal.toFixed(0)}`;
         document.getElementById("costoEnvio").textContent = `${costoEnvio.toFixed(0)}`;
@@ -151,19 +150,22 @@ else {
                     });
                     cartContent.innerHTML += `
                         <hr>
+
                         <h3 class="my-4">Tipo de envío</h3>
-                        <form id="shippingForm">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" id="premium" name="tipoDeEnvio" value="0.15" checked />
-                            <label class="form-check-label" for="premium">Premium - 2 a 5 días (15%)</label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" id="express" name="tipoDeEnvio" value="0.07"/>
-                            <label class="form-check-label" for="express">Express - 5 a 8 días (7%)</label>
-                          </div>
-                          <div class="form-check mb-4">
-                            <input class="form-check-input" type="radio" id="standard" name="tipoDeEnvio" value="0.05"/>
-                            <label class="form-check-label" for="standard">Standard - 12 a 15 días (5%)</label>
+                        <form>
+                        <div id="tipoDeEnvio">                          
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="premium" name="tipoDeEnvio" value="0.15" checked />
+                                <label class="form-check-label" for="premium">Premium - 2 a 5 días (15%)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="express" name="tipoDeEnvio" value="0.07"/>
+                                <label class="form-check-label" for="express">Express - 5 a 8 días (7%)</label>
+                            </div>
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="radio" id="standard" name="tipoDeEnvio" value="0.05"/>
+                                <label class="form-check-label" for="standard">Standard - 12 a 15 días (5%)</label>
+                            </div>
                           </div>
                     
                           <h3 class="mb-3">Dirección de envío</h3>
@@ -186,42 +188,41 @@ else {
                         </form>
 
                         <hr>
+
                         <div class="mt-4" id="infoCost">
-                        <div>
                             <h2 class="mb-4">Costos</h2>
-                        </div>
                             <div class="list-group-item">
                                 <div class="d-flex justify-content-between align-items-center">
-                                <h5>Subtotal general</h5>
-                                <div>
-                                <span>USD</span>
-                                <span id="subtotalCosto"></span>
-                                </div>
+                                <h5 class="my-2">Subtotal general</h5>
+                                    <div>
+                                        <span>USD</span>
+                                        <span id="subtotalCosto"></span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5>Costo de envío</h5>
-                                <div>
-                                <span>USD</span>
-                                <span id="costoEnvio"></span>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="my-2">Costo de envío</h5>
+                                    <div>
+                                        <span>USD</span>
+                                        <span id="costoEnvio"></span>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                             <div class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5>Total</h5>
-                                <div>
-                                <strong>USD</strong>
-                                <strong id="totalCosto"></strong>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="my-2">Total</h5>
+                                    <div>
+                                        <strong>USD</strong>
+                                        <strong id="totalCosto"></strong>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         <hr class="mt-5">
                         </div>
                     `;
-                    const shippingForm = document.getElementById("shippingForm");
-                    shippingForm.addEventListener("change", function () {
+                    document.getElementById("tipoDeEnvio");
+                    tipoDeEnvio.addEventListener("change", function () {
                         displayCosts(cart);
                     });
                     displayCosts(cart);
