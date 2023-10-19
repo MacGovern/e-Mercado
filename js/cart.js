@@ -46,11 +46,36 @@ else {
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let originalValue;
+
     //const cartAndCartFromAPI = [...cart];
     //const placeHolder = [];
     //const cartAndCartFromAPI = placeHolder.concat(cart);
     //console.log('cart', cart);
-    //console.log('cartAndCartFromAPI', cartAndCartFromAPI);    
+    //console.log('cartAndCartFromAPI', cartAndCartFromAPI);
+
+    async function setConversionRate() {
+        const nextUpdate = localStorage.getItem('nextUpdate');
+
+        if (!nextUpdate || new Date() >= new Date(nextUpdate)) {
+            try {
+                const response = await fetch(`https://v6.exchangerate-api.com/v6/e45807accf924ce9fedaa32e/pair/UYU/USD`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                localStorage.setItem('nextUpdate', data.time_next_update_utc);
+                localStorage.setItem('conversionRate', data.conversion_rate);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
+
+    setConversionRate();
+    const conversionRate = localStorage.getItem('conversionRate') || 0.025;
 
     function updateOriginalValue(value) {
         originalValue = value;
@@ -60,13 +85,18 @@ else {
         cart = JSON.parse(localStorage.getItem('cart'));
         let subtotal = 0;
 
-        cart.forEach(article => subtotal += article.count * article.unitCost);
+        cart.forEach(article => {
+            if (article.currency === 'UYU')
+                subtotal += article.count * article.unitCost * conversionRate;
+            else
+                subtotal += article.count * article.unitCost;
+        });
 
-        const costoEnvio = parseFloat(document.querySelector('input[name="tipoDeEnvio"]:checked').value) * subtotal;
-        
-        document.getElementById("subtotalCosto").textContent = `${subtotal.toFixed(0)}`;
-        document.getElementById("costoEnvio").textContent = `${costoEnvio.toFixed(0)}`;
-        document.getElementById("totalCosto").textContent = `${(subtotal + costoEnvio).toFixed(0)}`;
+        const costoEnvio = document.querySelector('input[name="tipoDeEnvio"]:checked').value * subtotal;
+
+        document.getElementById("subtotalCosto").textContent = `${parseFloat(subtotal).toFixed(2)}`;
+        document.getElementById("costoEnvio").textContent = `${parseFloat(costoEnvio).toFixed(2)}`;
+        document.getElementById("totalCosto").textContent = `${(subtotal + costoEnvio).toFixed(2)}`;
     }
 
     function updateSubtotal(inputElement, id) { // Función para recalcular el subtotal de un artículo.
