@@ -45,6 +45,7 @@ else {
     });
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartContent = document.getElementById('cartContent');
     let originalValue;
 
     //const cartAndCartFromAPI = [...cart];
@@ -77,12 +78,21 @@ else {
     setConversionRate();
     const conversionRate = localStorage.getItem('conversionRate') || 0.025;
 
+    function emptyCart() {
+        if (cart.length === 0) {
+            cartContent.innerHTML = `
+                <p class="lead my-4">Actualmente no tiene ningún artículo seleccionado.</p>
+            `;
+            return true;
+        } else
+            return false
+    }
+
     function updateOriginalValue(value) {
         originalValue = value;
     }
 
     function displayCosts() {
-        cart = JSON.parse(localStorage.getItem('cart'));
         let subtotal = 0;
 
         cart.forEach(article => {
@@ -141,30 +151,38 @@ else {
         localStorage.setItem('cart', JSON.stringify(cart));
         cart = JSON.parse(localStorage.getItem('cart'));
     }
-    function removeFromCart(index) {
-        if (cart.length > 0) {
-            const elementDelete = document.getElementById(index);
-            const elementDeleteParentNode = elementDelete.parentNode;
-    
-            //Identifica los hr que tengan esa clase específica y los elimina
-            const deleteHr = elementDeleteParentNode.querySelectorAll(`hr.hr-${index}`);
-            deleteHr.forEach(hr => {
-                elementDeleteParentNode.removeChild(hr);
-            });
-    
-            //Elimina el producto del carrito visualmente
-            elementDeleteParentNode.removeChild(elementDelete);
-    
-            //Elimina el producto del carrito en el local storage
-            cart.splice(index, 1);
-        } 
-    
-        //Actualiza el carrito en localStorage
+
+    function removeFromCart(index, id) {
+        //Itera sobre el carrito en el local storage hasta encontrar el producto a eliminar
+        let i = 0;
+        while (i < cart.length && id !== cart[i].id)
+            i++;
+
+        //Elimina el producto del carrito en el local storage
+        cart.splice(i, 1);
+
+        //Actualiza el carrito en el localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
-        displayCosts();
+        cart = JSON.parse(localStorage.getItem('cart'));
+
+        //Si el carrito no esta vacio
+        if (!emptyCart()) {
+            const element = document.getElementById(index);
+            const nextElement = element.nextElementSibling;
+
+            //Si el hr que esta debajo del producto que se va a eliminar, no es el ultimo, se elimina
+            if (!nextElement.classList.contains('mb-4'))
+                cartContent.removeChild(nextElement);
+            //Si no, se elimina el hr que esta encima
+            else
+                cartContent.removeChild(element.previousElementSibling);
+
+            //Elimina el producto del carrito visual
+            cartContent.removeChild(element);
+
+            displayCosts();
+        }
     }
-    
-    
 
     // function addToCart(article) {
     //     let index = 0;
@@ -194,14 +212,8 @@ else {
                 localStorage.setItem('userCartFromAPI_fetchCounter', false)
             }
 
-            if (cart.length === 0)
-                document.getElementById('cartContent').innerHTML += `
-                    <p class="lead my-4">Actualmente no tiene ningún artículo seleccionado.</p>
-                `;
-            else {
-                const cartContent = document.getElementById('cartContent');
-
-                cartContent.innerHTML += `
+            if (!emptyCart()) {
+                cartContent.innerHTML = `
                     <h3 class="my-4">Artículos a Comprar</h3>
                     <div class="row d-flex flex-nowrap">
                         <div class="col col-lg-2 me-lg-3 me-xl-4 me-xxl-5" id="colNoImage">
@@ -246,13 +258,13 @@ else {
                                 <strong> ${article.currency} <span id="${article.id}" data-articleUnitCost="${article.unitCost}">${article.unitCost * article.count}</span></strong>
                             </div>
                             <div class="col">
-                                <button class="btn btn-outline-danger" onclick="removeFromCart(${index})" ><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn btn-outline-danger" onclick="removeFromCart(${index}, ${article.id})" ><i class="fas fa-trash-alt"></i></button>
                             </div>
                         </div>
                     `;
 
                     if (index !== cart.length - 1)
-                        cartContent.innerHTML +=  `<hr class="hr-${index}">`;
+                        cartContent.innerHTML += `<hr>`;
                     else
                         cartContent.innerHTML += '<hr style="opacity: 1;" class="mb-4">';
                 });
