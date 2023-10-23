@@ -141,6 +141,30 @@ else {
         localStorage.setItem('cart', JSON.stringify(cart));
         cart = JSON.parse(localStorage.getItem('cart'));
     }
+    function removeFromCart(index) {
+        if (cart.length > 0) {
+            const elementDelete = document.getElementById(index);
+            const elementDeleteParentNode = elementDelete.parentNode;
+    
+            //Identifica los hr que tengan esa clase específica y los elimina
+            const deleteHr = elementDeleteParentNode.querySelectorAll(`hr.hr-${index}`);
+            deleteHr.forEach(hr => {
+                elementDeleteParentNode.removeChild(hr);
+            });
+    
+            //Elimina el producto del carrito visualmente
+            elementDeleteParentNode.removeChild(elementDelete);
+    
+            //Elimina el producto del carrito en el local storage
+            cart.splice(index, 1);
+        } 
+    
+        //Actualiza el carrito en localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCosts();
+    }
+    
+    
 
     // function addToCart(article) {
     //     let index = 0;
@@ -195,6 +219,9 @@ else {
                         <div class="col rowNoImage">
                             <strong>Subtotal</strong>
                         </div>
+                        <div class="col">
+                            <!-- Espacio vacio que se corresponde con el trash can-->
+                        </div>
                     </div>
 
                     <hr style="opacity: 1;">
@@ -202,7 +229,7 @@ else {
 
                 cart.forEach((article, index) => {
                     cartContent.innerHTML += `                        
-                        <div class="row d-flex align-items-center flex-nowrap">
+                        <div class="row d-flex align-items-center flex-nowrap" id="${index}">
                             <div class="col col-lg-2 me-lg-3 me-xl-4 me-xxl-5" id="colImage">
                                 <img src="${article.image}" alt="Producto" class="img-thumbnail">
                             </div>
@@ -218,11 +245,14 @@ else {
                             <div class="col rowImage">
                                 <strong> ${article.currency} <span id="${article.id}" data-articleUnitCost="${article.unitCost}">${article.unitCost * article.count}</span></strong>
                             </div>
+                            <div class="col">
+                                <button class="btn btn-outline-danger" onclick="removeFromCart(${index})" ><i class="fas fa-trash-alt"></i></button>
+                            </div>
                         </div>
                     `;
 
                     if (index !== cart.length - 1)
-                        cartContent.innerHTML += '<hr>';
+                        cartContent.innerHTML +=  `<hr class="hr-${index}">`;
                     else
                         cartContent.innerHTML += '<hr style="opacity: 1;" class="mb-4">';
                 });
