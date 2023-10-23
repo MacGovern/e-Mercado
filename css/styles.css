@@ -192,10 +192,7 @@ body, .card {
 .list-group-item {
   color: var(--bs-light-text-emphasis);
   transition: .2s;
-}
-
-.list-group-item-action {
-  background-color: var(--bs-light-border-subtle);
+  background-color:  var(--bs-light-border-subtle);
 }
 
 .darkText, .form-floating {
