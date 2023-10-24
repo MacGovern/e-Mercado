@@ -263,7 +263,7 @@ else {
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4 mb-4">
+                            <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4 mb-3">
                                 <label class="form-label" for="esquina">Esquina</label>
                                 <input type="text" class="form-control" id="esquina" />
                             </div>
@@ -273,7 +273,7 @@ else {
                     <hr>
 
                     <div class="mt-4" id="infoCost">
-                        <h2 class="mb-4">Costos</h2>
+                        <h3 class="mb-4">Costos</h3>
 
                         <div class="list-group-item">
                             <div class="d-flex justify-content-between align-items-center">
@@ -308,9 +308,14 @@ else {
                         <hr class="mt-5">
                     </div>
                     
+                    <div>
                     <h3>Forma de pago</h3>
-                    <p>No ha seleccionado</p>
-                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#paymentModal">Seleccionar</button>
+                    <p>
+                        <span>No ha seleccionado</span>
+                        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#paymentModal">Seleccionar</button>
+                        </p>
+                </div>
+                
                     
                     
                     
@@ -328,39 +333,42 @@ else {
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
                                                 <label class="form-check-label" for="flexRadioDefault1">
-                                                  Tarjeta de crédito
+                                                Tarjeta de crédito
                                                 </label>
-                                              </div> 
+                                            </div> 
                                         <hr>
-                                             
+                                        
+                                        <div class="row">
+                                        <div class="form-group col-sm-6 col-md-6 ">
+                                            <label for="cardNumber">Número de tarjeta</label>
+                                            <input type="text" id="cardNumber" class="form-control">
                                         </div>
-                                       
-                                        <div class="form-group">
-                                            <label for="cardNumber">Número de Tarjeta</label>
-                                            <input type="text" id="cardNumber" class="form-control" >
+                            
+                                        <div class="form-group col-sm-4 col-md-4 ">
+                                            <label for="securityCode">Código de seg.</label>
+                                            <input type="text" id="securityCode" class="form-control">
                                         </div>
-                                   
-                                    
-                                        <div class="form-group">
-                                            <label for="securityCode">Código de Seg.</label>
-                                            <input type="text" id="securityCode" class="form-control" >
-                                        </div>
-                                   
-                                        <div class="form-group">
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6 col-md-6 ">
                                             <label for="expirationDate">Vencimiento (MM/AA)</label>
                                             <input type="text" id="expirationDate" class="form-control" >
+                                        </div>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
                                             <label class="form-check-label" for="flexRadioDefault2"> 
-                                              
+                                            
                                                 Transferencia bancaria
                                             </label>
-                                          </div>
-                                          <hr>
-                                        <div class="form-group">
-                                            <label for="accountNumber">Número de Cuenta</label>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                        <div class="form-group col-sm-6 col-md-6">
+                                            <label for="accountNumber">Número de cuenta</label>
                                             <input type="text" id="accountNumber" class="form-control" >
+                                        </div>
                                         </div>
                                         
                                     </form>
