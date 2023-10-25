@@ -291,7 +291,7 @@ else {
 
                 cartContent.innerHTML += `
                     <h3 class="my-4">Tipo de envío</h3>
-                    <form>
+                    <form class="needs-validation" novalidate>
                         <div onchange="displayCosts()">                          
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="premium" name="tipoDeEnvio" value="0.15" checked />
@@ -312,23 +312,32 @@ else {
                         <div class="row">
                             <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4 mb-3">
                                 <label class="form-label" for="calle">Calle</label>
-                                <input type="text" class="form-control" id="calle" />
+                                <input type="text" class="form-control" id="calle" required/>
+                                <div class="invalid-feedback">
+                                    Ingresa una calle
+                                </div>
                             </div>
 
                             <div class="col-sm-9 col-md-5 col-lg-4 col-xxl-3 mb-3">
                                 <label class="form-label" for="numero">Número</label>
-                                <input type="text" class="form-control" id="numero" />
+                                <input type="text" class="form-control" id="numero" required/>
+                                <div class="invalid-feedback">
+                                    Ingresa un número
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4">
                                 <label class="form-label" for="esquina">Esquina</label>
-                                <input type="text" class="form-control" id="esquina" />
+                                <input type="text" class="form-control" id="esquina" required/>
+                                <div class="invalid-feedback">
+                                    Ingresa una esquina
+                                </div>
                             </div>
                         </div>
-                    </form>
-
+                    <form/>
+                    
                     <hr class="mt-4">
 
                     <div id="infoCost">
@@ -430,10 +439,35 @@ else {
                             </div>
                         </div>
                     </div>
+                    
+                    <form id="form1">
+                        <button type="submit" class="w-100 btn btn-primary btn-lg mt-5">Finalizar compra</button>
+                    </form>
                     `;
 
                 displayCosts();
+
+                  document.getElementById("form1").addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    let calle = document.getElementById('calle');
+                    if (calle.value === '') {
+                        calle.classList.add("is-invalid")
+                        calle.classList.remove("is-valid")
+                    } else {
+                        calle.classList.remove("is-invalid")
+                        calle.classList.add("is-valid")
+                    }
+                    calle.addEventListener('input',()=>{
+                        if (calle.value === '') {
+                            calle.classList.add("is-invalid")
+                        } else {
+                            calle.classList.remove("is-invalid")
+                            calle.classList.add("is-valid")
+                        }
+                    })
+                });
             }
         })
         .catch(error => console.error('Error: ', error));
 }
+
