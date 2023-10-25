@@ -184,7 +184,7 @@ body {
   /* transition: .4s; */
 }
 
-body, .card {
+body, .card, .modal-content {
   background-color: var(--bs-body-bg);
   /* transition: .4s; */
 }
