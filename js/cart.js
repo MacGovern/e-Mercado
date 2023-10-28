@@ -160,6 +160,7 @@ else {
         document.getElementById('accountNumber').setAttribute('disabled', true);
 
         document.getElementById('paymentMethod').innerHTML = 'Tarjeta de crédito. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
+        document.getElementById('accountNumber').value = "";
     }
 
     function wireTransferSelected() {
@@ -170,6 +171,9 @@ else {
         document.getElementById('expirationDate').setAttribute('disabled', true);
 
         document.getElementById('paymentMethod').innerHTML = 'Transferencia bancaria. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
+        document.getElementById('cardNumber').value = "";
+        document.getElementById('securityCode').value = "";
+        document.getElementById('expirationDate').value = "";
     }
 
     function removeFromCart(index, id) {
@@ -400,12 +404,18 @@ else {
                                             <div class="row">
                                                 <div class="form-group col-sm-6 col-md-6 ">
                                                     <label for="cardNumber">Número de tarjeta</label>
-                                                    <input type="text" id="cardNumber" class="form-control mb-3" disabled>
+                                                    <input type="text" id="cardNumber" class="form-control mb-3 validCard " maxlength="16" minlength="16" disabled required>
+                                                    <div class="invalid-feedback">
+                                                        Ingrese un número de tarjeta válido
+                                                    </div>
                                                 </div>
                                 
                                                 <div class="form-group col-sm-4 col-md-4 ">
                                                     <label for="securityCode">Código de seg.</label>
-                                                    <input type="text" id="securityCode" class="form-control mb-3" disabled>
+                                                    <input type="text" id="securityCode" class="form-control mb-3 validCard" maxlength="3" minlength="3" disabled required>
+                                                    <div class="invalid-feedback">
+                                                        Ingrese un código de seguridad válido
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -413,7 +423,10 @@ else {
                                         <div class="row">
                                             <div class="form-group col-sm-6 col-md-6 ">
                                                 <label for="expirationDate">Vencimiento (MM/AA)</label>
-                                                <input type="text" id="expirationDate" class="form-control mb-3" disabled>
+                                                <input type="date" id="expirationDate" class="form-control mb-3 validCard" disabled required>
+                                                <div class="invalid-feedback">
+                                                    Ingrese una fecha de vencimiento válida
+                                                </div>
                                             </div>
                                         </div>
 
@@ -429,7 +442,10 @@ else {
                                         <div class="row">
                                             <div class="form-group col-sm-6 col-md-6">
                                                 <label for="accountNumber">Número de cuenta</label>
-                                                <input type="text" id="accountNumber" class="form-control" disabled>
+                                                <input type="text" id="accountNumber" class="form-control" disabled required>
+                                                <div class="invalid-feedback">
+                                                    Ingrese un número de cuenta válido
+                                                </div>
                                             </div>
                                         </div>                                        
                                     </div>
@@ -440,6 +456,7 @@ else {
                                 </div>
                             </div>
                         </div>
+                        <div class="invalid-feedback" id="errorMessage"></div>
                         
                         <input type="submit" class="w-100 btn btn-primary btn-lg mt-5" value="Finalizar compra" />
                     </form>
@@ -450,26 +467,82 @@ else {
                 document.getElementById("purchaseForm").addEventListener("submit", (e) => {
                     e.preventDefault();
                     Array.from(document.getElementsByClassName('deliveryAddress')).forEach(element => {
-                        if (!element.checkValidity()) {
-                            element.classList.add("is-invalid");
-                            element.classList.remove("is-valid");
-                        } else {
-                            element.classList.remove("is-invalid");
-                            element.classList.add("is-valid");
-                        }
-
-                        element.addEventListener('input', () => {
-                            if (!element.checkValidity()) {
-                                element.classList.add("is-invalid");
-                                element.classList.remove("is-valid");
-                            } else {
-                                element.classList.remove("is-invalid");
-                                element.classList.add("is-valid");
-                            }
-                        });
+                        validation (element);
                     });
+                         
+                    const cardRadio = document.getElementById("flexRadioDefault1");
+                    const cardNumber = document.getElementById("cardNumber");
+                    const securityCode = document.getElementById("securityCode");
+                    const expirationDate = document.getElementById("expirationDate");
+                    const transferenceRadio = document.getElementById("flexRadioDefault2");
+                    const accountNumber = document.getElementById("accountNumber");
+                    const modal = document.getElementById("paymentModal");
+                    
+                    if (!cardRadio.checked && !transferenceRadio.checked) {
+                        document.getElementById("errorMessage").innerHTML = `Debe seleccionar una forma de pago`;
+                        modal.classList.add("is-invalid");
+                        modal.classList.remove("is-valid");
+                    } else {
+                        if (cardRadio.checked && (cardNumber.value.length != 16 || securityCode.value.length != 3 || expirationDate.value === "")) {
+                            if (cardNumber.value.length != 16) {
+                                document.getElementById("errorMessage").innerHTML = `Debe seleccionar un número de tarjeta válido`;
+                            } else {
+                                if (securityCode.value.length != 3) {
+                                    document.getElementById("errorMessage").innerHTML = `Debe seleccionar un código de seguridad válido`;
+                                } else {
+                                    document.getElementById("errorMessage").innerHTML = `Debe seleccionar una fecha de vencimiento válida`;
+                                }
+                            }
+                            modal.classList.add("is-invalid");
+                            modal.classList.remove("is-valid");
+                            
+                            Array.from(document.getElementsByClassName('validCard')).forEach(element => {
+                                validation (element);
+                            });
+                        } else {
+                            if (transferenceRadio.checked && accountNumber.value === "") {
+                                document.getElementById("errorMessage").innerHTML = `Debe seleccionar un número de cuenta válido`
+                                modal.classList.add("is-invalid");
+                                modal.classList.remove("is-valid");
+                                validation(accountNumber);
+                            } else {
+                                modal.classList.remove("is-invalid");
+                                modal.classList.add("is-valid");
+                                if (cardRadio.checked) {
+                                    Array.from(document.getElementsByClassName('validCard')).forEach(element => {
+                                        validation (element);
+                                    });
+                                } else {
+                                    if (transferenceRadio.checked) {
+                                        validation(accountNumber);
+                                    }
+                                }
+                            }
+                        }               
+                    }                 
                 });
             }
         })
+        
         .catch(error => console.error('Error: ', error));
 }
+
+function validation (element) { 
+    if (!element.checkValidity()) {
+        element.classList.add("is-invalid");
+        element.classList.remove("is-valid");
+    } else {
+        element.classList.remove("is-invalid");
+        element.classList.add("is-valid");
+    }
+
+    element.addEventListener('input', () => {
+        if (!element.checkValidity()) {
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+        } else {
+            element.classList.remove("is-invalid");
+            element.classList.add("is-valid");
+        }
+    });
+};
