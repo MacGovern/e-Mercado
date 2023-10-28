@@ -215,7 +215,10 @@ else {
         document.body.appendChild(alerta);
         setTimeout(() => {
             document.body.removeChild(alerta);
-        },2000);
+            localStorage.setItem('cart', JSON.stringify([]));
+            cart = JSON.parse(localStorage.getItem('cart'));
+            emptyCart();
+        }, 3000);
     }
 
 
