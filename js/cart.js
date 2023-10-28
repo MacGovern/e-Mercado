@@ -207,6 +207,17 @@ else {
             displayCosts();
         }
     }
+    
+    function mostrarAlerta() {
+        const alerta = document.createElement('div');
+        alerta.className = 'alert alert-success';
+        alerta.innerHTML = '¡Has comprado con éxito!';
+        document.body.appendChild(alerta);
+        setTimeout(() => {
+            document.body.removeChild(alerta);
+        },2000);
+    }
+
 
     // function addToCart(article) {
     //     let index = 0;
@@ -466,8 +477,12 @@ else {
 
                 document.getElementById("purchaseForm").addEventListener("submit", (e) => {
                     e.preventDefault();
+                    let isValid = true;
                     Array.from(document.getElementsByClassName('deliveryAddress')).forEach(element => {
                         validation (element);
+                        if (element.classList.contains("is-invalid")) {
+                            isValid = false;
+                        }
                     });
                          
                     const cardRadio = document.getElementById("flexRadioDefault1");
@@ -519,7 +534,10 @@ else {
                                 }
                             }
                         }               
-                    }                 
+                    }
+                    if (isValid && modal.classList.contains("is-valid")) {
+                        mostrarAlerta();
+                    }
                 });
             }
         })
