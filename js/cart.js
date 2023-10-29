@@ -152,30 +152,6 @@ else {
         cart = JSON.parse(localStorage.getItem('cart'));
     }
 
-    function creditCardSelected() {
-        document.getElementById('cardNumber').removeAttribute('disabled');
-        document.getElementById('securityCode').removeAttribute('disabled');
-        document.getElementById('expirationDate').removeAttribute('disabled');
-
-        document.getElementById('accountNumber').setAttribute('disabled', true);
-
-        document.getElementById('paymentMethod').innerHTML = 'Tarjeta de crédito. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
-        document.getElementById('accountNumber').value = "";
-    }
-
-    function wireTransferSelected() {
-        document.getElementById('accountNumber').removeAttribute('disabled');
-
-        document.getElementById('cardNumber').setAttribute('disabled', true);
-        document.getElementById('securityCode').setAttribute('disabled', true);
-        document.getElementById('expirationDate').setAttribute('disabled', true);
-
-        document.getElementById('paymentMethod').innerHTML = 'Transferencia bancaria. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
-        document.getElementById('cardNumber').value = "";
-        document.getElementById('securityCode').value = "";
-        document.getElementById('expirationDate').value = "";
-    }
-
     function removeFromCart(index, id) {
         //Itera sobre el carrito en el local storage hasta encontrar el producto a eliminar
         let i = 0;
@@ -207,20 +183,81 @@ else {
             displayCosts();
         }
     }
-    
-    function mostrarAlerta() {
-        const alerta = document.createElement('div');
-        alerta.className = 'alert alert-success';
-        alerta.innerHTML = '¡Has comprado con éxito!';
-        document.body.appendChild(alerta);
-        setTimeout(() => {
-            document.body.removeChild(alerta);
-            localStorage.setItem('cart', JSON.stringify([]));
-            cart = JSON.parse(localStorage.getItem('cart'));
-            emptyCart();
-        }, 3000);
+
+    function validate(element) {
+        if (!element.checkValidity()) {
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+        } else {
+            element.classList.remove("is-invalid");
+            element.classList.add("is-valid");
+        }
+
+        element.addEventListener('input', () => {
+            if (!element.checkValidity()) {
+                element.classList.add("is-invalid");
+                element.classList.remove("is-valid");
+            } else {
+                element.classList.remove("is-invalid");
+                element.classList.add("is-valid");
+            }
+        });
+    };
+
+    function creditCardSelected() {
+        Array.from(document.getElementsByClassName('creditCard')).forEach(element => {
+            element.removeAttribute('disabled');
+            element.setAttribute('required', true);
+        });
+        accountNumber.classList.remove('is-invalid', 'is-valid');
+        accountNumber.setAttribute('disabled', true);
+        accountNumber.removeAttribute('required');
+        document.getElementById('paymentMethod').innerHTML = 'Tarjeta de crédito. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
     }
 
+    function wireTransferSelected() {
+        Array.from(document.getElementsByClassName('creditCard')).forEach(element => {
+            element.classList.remove('is-invalid', 'is-valid');
+            element.removeAttribute('required');
+            element.setAttribute('disabled', true);
+        });
+        accountNumber.removeAttribute('disabled');
+        accountNumber.setAttribute('required', true);
+        document.getElementById('paymentMethod').innerHTML = 'Transferencia bancaria. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
+    }
+
+    function removeModalFeedback() {
+        modalFeedback.textContent = '';
+    }
+
+    function formatDate(element) {
+        const cleanedValue = element.value.replace(/[^0-9/]/g, '');
+
+        if (cleanedValue.length > 2 && cleanedValue.charAt(2) !== '/') {
+            element.value = cleanedValue.substring(0, 2) + '/' + cleanedValue.substring(2);
+        } else {
+            element.value = cleanedValue;
+        }
+    }
+
+    function onlyDigits(element) {
+        element.value = element.value.replace(/[^0-9]/g, '');
+    }
+
+    function isExpired(userInput) {
+        const inputParts = userInput.split('/');
+        return new Date(2000 + parseInt(inputParts[1]), parseInt(inputParts[0]) - 1) < new Date();
+    }
+
+    function mostrarAlerta() {
+        const alerta = document.getElementById('purchaseAlert');
+        alerta.classList.replace('d-none', 'd-block');
+        localStorage.removeItem('cart');
+        setTimeout(() => {
+            alerta.classList.replace('d-block', 'd-none');
+            cartContent.innerHTML = '<p class="lead my-4">Actualmente no tiene ningún artículo seleccionado.</p>';
+        }, 3000);
+    }
 
     // function addToCart(article) {
     //     let index = 0;
@@ -394,8 +431,10 @@ else {
                         <hr class="mt-4">
                         
                         <h3 class="my-4">Forma de pago</h3>                    
-                        <span id="paymentMethod">No ha seleccionado ninguna forma de pago. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">Seleccione una opción.</a></span>   
-                    
+                        <span id="paymentMethod">No ha seleccionado ninguna forma de pago. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">Seleccione una opción.</a></span>
+                        <br class="my-2">
+                        <small class="text-danger" id="modalFeedback"></small>
+
                         <!-- Modal -->
                         <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -407,8 +446,8 @@ else {
                                     <div class="modal-body">                                        
                                         <div class="form-group">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onclick="creditCardSelected()">
-                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                <input class="form-check-input" type="radio" name="paymentMethodRadio" id="creditCardRadio" onclick="creditCardSelected()" required>
+                                                <label class="form-check-label" for="creditCardRadio">
                                                     Tarjeta de crédito
                                                 </label>
                                             </div>
@@ -418,17 +457,17 @@ else {
                                             <div class="row">
                                                 <div class="form-group col-sm-6 col-md-6 ">
                                                     <label for="cardNumber">Número de tarjeta</label>
-                                                    <input type="text" id="cardNumber" class="form-control mb-3 validCard " maxlength="16" minlength="16" disabled required>
+                                                    <input type="text" inputmode="numeric" id="cardNumber" class="form-control mb-3 creditCard" maxlength="19" pattern="[0-9]{12,19}" disabled required oninput="onlyDigits(this)">
                                                     <div class="invalid-feedback">
-                                                        Ingrese un número de tarjeta válido
+                                                        Ingresa un número de tarjeta válido
                                                     </div>
                                                 </div>
                                 
                                                 <div class="form-group col-sm-4 col-md-4 ">
                                                     <label for="securityCode">Código de seg.</label>
-                                                    <input type="text" id="securityCode" class="form-control mb-3 validCard" maxlength="3" minlength="3" disabled required>
+                                                    <input type="text" inputmode="numeric" id="securityCode" class="form-control mb-3 creditCard" maxlength="3" pattern="[0-9]{3}" disabled required oninput="onlyDigits(this)">
                                                     <div class="invalid-feedback">
-                                                        Ingrese un código de seguridad válido
+                                                        Ingresa un código de seguridad válido
                                                     </div>
                                                 </div>
                                             </div>
@@ -437,16 +476,16 @@ else {
                                         <div class="row">
                                             <div class="form-group col-sm-6 col-md-6 ">
                                                 <label for="expirationDate">Vencimiento (MM/AA)</label>
-                                                <input type="date" id="expirationDate" class="form-control mb-3 validCard" disabled required>
+                                                <input type="text" inputmode="numeric" id="expirationDate" class="form-control mb-3 creditCard" pattern="^(0[1-9]|1[0-2])\/[0-9]{2}$" maxlength="5" disabled oninput="formatDate(this)">
                                                 <div class="invalid-feedback">
-                                                    Ingrese una fecha de vencimiento válida
+                                                    Ingresa una fecha de vencimiento válida
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onclick="wireTransferSelected()">
-                                            <label class="form-check-label" for="flexRadioDefault2">                                            
+                                            <input class="form-check-input" type="radio" name="paymentMethodRadio" id="wireTransferRadio" onclick="wireTransferSelected()" required>
+                                            <label class="form-check-label" for="wireTransferRadio">                                            
                                                 Transferencia bancaria
                                             </label>
                                         </div>
@@ -456,9 +495,9 @@ else {
                                         <div class="row">
                                             <div class="form-group col-sm-6 col-md-6">
                                                 <label for="accountNumber">Número de cuenta</label>
-                                                <input type="text" id="accountNumber" class="form-control" disabled required>
+                                                <input type="text" id="accountNumber" class="form-control" maxlength="16" pattern="[0-9]{16}" disabled required oninput="onlyDigits(this)">
                                                 <div class="invalid-feedback">
-                                                    Ingrese un número de cuenta válido
+                                                    Ingresa un número de cuenta válido
                                                 </div>
                                             </div>
                                         </div>                                        
@@ -469,8 +508,7 @@ else {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="invalid-feedback" id="errorMessage"></div>
+                        </div>                        
                         
                         <input type="submit" class="w-100 btn btn-primary btn-lg mt-5" value="Finalizar compra" />
                     </form>
@@ -478,92 +516,63 @@ else {
 
                 displayCosts();
 
-                document.getElementById("purchaseForm").addEventListener("submit", (e) => {
+                const expirationDate = document.getElementById("expirationDate");
+                const accountNumber = document.getElementById("accountNumber");
+                const purchaseForm = document.getElementById("purchaseForm");
+                const creditCardRadio = document.getElementById("creditCardRadio");
+                const wireTransferRadio = document.getElementById("wireTransferRadio");
+                const modalFeedback = document.getElementById("modalFeedback");
+                const paymentOptions = Array.from(document.getElementsByName('paymentMethodRadio'));
+                const creditCard = Array.from(document.getElementsByClassName('creditCard'));
+
+                function allGood() {
+                    return document.getElementById("cardNumber").checkValidity() && document.getElementById("securityCode").checkValidity() && expirationDate.classList.contains('is-valid');
+                }
+
+                purchaseForm.addEventListener("submit", (e) => {
                     e.preventDefault();
-                    let isValid = true;
-                    Array.from(document.getElementsByClassName('deliveryAddress')).forEach(element => {
-                        validation (element);
-                        if (element.classList.contains("is-invalid")) {
-                            isValid = false;
-                        }
-                    });
-                         
-                    const cardRadio = document.getElementById("flexRadioDefault1");
-                    const cardNumber = document.getElementById("cardNumber");
-                    const securityCode = document.getElementById("securityCode");
-                    const expirationDate = document.getElementById("expirationDate");
-                    const transferenceRadio = document.getElementById("flexRadioDefault2");
-                    const accountNumber = document.getElementById("accountNumber");
-                    const modal = document.getElementById("paymentModal");
-                    
-                    if (!cardRadio.checked && !transferenceRadio.checked) {
-                        document.getElementById("errorMessage").innerHTML = `Debe seleccionar una forma de pago`;
-                        modal.classList.add("is-invalid");
-                        modal.classList.remove("is-valid");
-                    } else {
-                        if (cardRadio.checked && (cardNumber.value.length != 16 || securityCode.value.length != 3 || expirationDate.value === "")) {
-                            if (cardNumber.value.length != 16) {
-                                document.getElementById("errorMessage").innerHTML = `Debe seleccionar un número de tarjeta válido`;
-                            } else {
-                                if (securityCode.value.length != 3) {
-                                    document.getElementById("errorMessage").innerHTML = `Debe seleccionar un código de seguridad válido`;
-                                } else {
-                                    document.getElementById("errorMessage").innerHTML = `Debe seleccionar una fecha de vencimiento válida`;
-                                }
-                            }
-                            modal.classList.add("is-invalid");
-                            modal.classList.remove("is-valid");
-                            
-                            Array.from(document.getElementsByClassName('validCard')).forEach(element => {
-                                validation (element);
+                    paymentOptions.forEach(element => element.removeEventListener('click', removeModalFeedback));
+                    if (!purchaseForm.checkValidity()) {
+                        Array.from(document.getElementsByClassName('deliveryAddress')).forEach(element => validate(element));
+                        if (!(creditCardRadio.checked || wireTransferRadio.checked)) {
+                            modalFeedback.textContent = 'Debe seleccionar una forma de pago';
+                            paymentOptions.forEach(element => element.addEventListener('click', removeModalFeedback));
+                        } else if (creditCardRadio.checked) {
+                            creditCard.forEach(element => validate(element));
+                            if (expirationDate.checkValidity() && isExpired(expirationDate.value))
+                                expirationDate.classList.replace('is-valid', 'is-invalid');
+                            expirationDate.addEventListener('input', () => {
+                                if (expirationDate.checkValidity() && isExpired(expirationDate.value))
+                                    expirationDate.classList.replace('is-valid', 'is-invalid');
                             });
-                        } else {
-                            if (transferenceRadio.checked && accountNumber.value === "") {
-                                document.getElementById("errorMessage").innerHTML = `Debe seleccionar un número de cuenta válido`
-                                modal.classList.add("is-invalid");
-                                modal.classList.remove("is-valid");
-                                validation(accountNumber);
-                            } else {
-                                modal.classList.remove("is-invalid");
-                                modal.classList.add("is-valid");
-                                if (cardRadio.checked) {
-                                    Array.from(document.getElementsByClassName('validCard')).forEach(element => {
-                                        validation (element);
-                                    });
-                                } else {
-                                    if (transferenceRadio.checked) {
-                                        validation(accountNumber);
-                                    }
-                                }
+                            if (!allGood()) {
+                                modalFeedback.textContent = 'Ingresa valores válidos';
+                                wireTransferRadio.addEventListener('click', removeModalFeedback);
                             }
-                        }               
-                    }
-                    if (isValid && modal.classList.contains("is-valid")) {
+                            creditCard.forEach(element => element.addEventListener('input', () => {
+                                if (allGood())
+                                    removeModalFeedback();
+                                else
+                                    modalFeedback.textContent = 'Ingresa valores válidos';
+                            }));
+                        } else if (wireTransferRadio.checked) {
+                            validate(accountNumber);
+                            if (!accountNumber.checkValidity()) {
+                                modalFeedback.textContent = 'Ingresa un número de cuenta válido';
+                                creditCardRadio.addEventListener('click', removeModalFeedback);
+                            }
+                            accountNumber.addEventListener('input', () => {
+                                if (accountNumber.checkValidity())
+                                    removeModalFeedback();
+                                else
+                                    modalFeedback.textContent = 'Ingresa un número de cuenta válido';
+                            })
+                        }
+                    } else
                         mostrarAlerta();
-                    }
                 });
             }
         })
-        
+
         .catch(error => console.error('Error: ', error));
 }
-
-function validation (element) { 
-    if (!element.checkValidity()) {
-        element.classList.add("is-invalid");
-        element.classList.remove("is-valid");
-    } else {
-        element.classList.remove("is-invalid");
-        element.classList.add("is-valid");
-    }
-
-    element.addEventListener('input', () => {
-        if (!element.checkValidity()) {
-            element.classList.add("is-invalid");
-            element.classList.remove("is-valid");
-        } else {
-            element.classList.remove("is-invalid");
-            element.classList.add("is-valid");
-        }
-    });
-};
