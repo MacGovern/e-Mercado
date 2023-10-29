@@ -152,26 +152,6 @@ else {
         cart = JSON.parse(localStorage.getItem('cart'));
     }
 
-    function creditCardSelected() {
-        document.getElementById('cardNumber').removeAttribute('disabled');
-        document.getElementById('securityCode').removeAttribute('disabled');
-        document.getElementById('expirationDate').removeAttribute('disabled');
-
-        document.getElementById('accountNumber').setAttribute('disabled', true);
-
-        document.getElementById('paymentMethod').innerHTML = 'Tarjeta de crédito. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
-    }
-
-    function wireTransferSelected() {
-        document.getElementById('accountNumber').removeAttribute('disabled');
-        
-        document.getElementById('cardNumber').setAttribute('disabled', true);
-        document.getElementById('securityCode').setAttribute('disabled', true);
-        document.getElementById('expirationDate').setAttribute('disabled', true);
-
-        document.getElementById('paymentMethod').innerHTML = 'Transferencia bancaria. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
-    }
-  
     function removeFromCart(index, id) {
         //Itera sobre el carrito en el local storage hasta encontrar el producto a eliminar
         let i = 0;
@@ -202,6 +182,81 @@ else {
 
             displayCosts();
         }
+    }
+
+    function validate(element) { // Si el elemento es valido, se le pone un tick verde (Bootstrap), si no, se visualiza un mensaje de error debajo del input (Bootstrap).
+        if (!element.checkValidity()) {
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+        } else {
+            element.classList.remove("is-invalid");
+            element.classList.add("is-valid");
+        }
+
+        element.addEventListener('input', () => {
+            if (!element.checkValidity()) {
+                element.classList.add("is-invalid");
+                element.classList.remove("is-valid");
+            } else {
+                element.classList.remove("is-invalid");
+                element.classList.add("is-valid");
+            }
+        });
+    };
+
+    function creditCardSelected() {
+        Array.from(document.getElementsByClassName('creditCard')).forEach(element => {
+            element.removeAttribute('disabled');
+            element.setAttribute('required', true);
+        });
+        accountNumber.classList.remove('is-invalid', 'is-valid');
+        accountNumber.setAttribute('disabled', true);
+        accountNumber.removeAttribute('required');
+        document.getElementById('paymentMethod').innerHTML = 'Tarjeta de crédito. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
+    }
+
+    function wireTransferSelected() {
+        Array.from(document.getElementsByClassName('creditCard')).forEach(element => {
+            element.classList.remove('is-invalid', 'is-valid');
+            element.removeAttribute('required');
+            element.setAttribute('disabled', true);
+        });
+        accountNumber.removeAttribute('disabled');
+        accountNumber.setAttribute('required', true);
+        document.getElementById('paymentMethod').innerHTML = 'Transferencia bancaria. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">¿Desea seleccionar otra forma de pago?</a>';
+    }
+
+    function removeModalFeedback() {
+        modalFeedback.textContent = '';
+    }
+
+    function formatDate(element) {
+        const cleanedValue = element.value.replace(/[^0-9/]/g, ''); // Todo lo que no sea un digito, lo elimina (lo remplaza con un "vacio").
+
+        if (cleanedValue.length > 2 && cleanedValue.charAt(2) !== '/') {
+            element.value = cleanedValue.substring(0, 2) + '/' + cleanedValue.substring(2);
+        } else {
+            element.value = cleanedValue;
+        }
+    }
+
+    function onlyDigits(element) {
+        element.value = element.value.replace(/[^0-9]/g, ''); // Todo lo que no sea un digito, lo elimina (lo remplaza con un "vacio").
+    }
+
+    function isExpired(userInput) { // userInput tiene un formato MM/AA
+        const inputParts = userInput.split('/');
+        return new Date(2000 + parseInt(inputParts[1]), parseInt(inputParts[0]) - 1) < new Date(); // A inputParts[0], el cual corresponde al mes, se le resta 1 porque en el objeto Date, enero se corresponde con un 0, no con un 1, por lo que va del 0 al 11.
+    }
+
+    function mostrarAlerta() { // Muestra una alerta que indica que la compra se realizo con exito.
+        const alerta = document.getElementById('purchaseAlert');
+        alerta.classList.replace('d-none', 'd-block');
+        localStorage.removeItem('cart');
+        setTimeout(() => {
+            alerta.classList.replace('d-block', 'd-none');
+            cartContent.innerHTML = '<p class="lead my-4">Actualmente no tiene ningún artículo seleccionado.</p>';
+        }, 3000);
     }
 
     // function addToCart(article) {
@@ -291,7 +346,7 @@ else {
 
                 cartContent.innerHTML += `
                     <h3 class="my-4">Tipo de envío</h3>
-                    <form>
+                    <form id="purchaseForm" class="needs-validation" novalidate>
                         <div onchange="displayCosts()">                          
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="premium" name="tipoDeEnvio" value="0.15" checked />
@@ -312,128 +367,212 @@ else {
                         <div class="row">
                             <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4 mb-3">
                                 <label class="form-label" for="calle">Calle</label>
-                                <input type="text" class="form-control" id="calle" />
+                                <input type="text" class="form-control deliveryAddress" id="calle" required/>
+                                <div class="invalid-feedback">
+                                    Ingresa una calle
+                                </div>
                             </div>
 
                             <div class="col-sm-9 col-md-5 col-lg-4 col-xxl-3 mb-3">
                                 <label class="form-label" for="numero">Número</label>
-                                <input type="text" class="form-control" id="numero" />
+                                <input type="text" class="form-control deliveryAddress" id="numero" required/>
+                                <div class="invalid-feedback">
+                                    Ingresa un número
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-9 col-md-7 col-lg-5 col-xl-4">
                                 <label class="form-label" for="esquina">Esquina</label>
-                                <input type="text" class="form-control" id="esquina" />
-                            </div>
-                        </div>
-                    </form>
-
-                    <hr class="mt-4">
-
-                    <div id="infoCost">
-                        <h3 class="my-4">Costos</h3>
-
-                        <div class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="my-2">Subtotal general</h5>
-                                <div>
-                                    <span>USD</span>
-                                    <span id="subtotalCosto"></span>
+                                <input type="text" class="form-control deliveryAddress" id="esquina" required/>
+                                <div class="invalid-feedback">
+                                    Ingresa una esquina
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="my-2">Costo de envío</h5>
-                                <div>
-                                    <span>USD</span>
-                                    <span id="costoEnvio"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="my-2">Total</h5>
-                                <div>
-                                    <strong>USD</strong>
-                                    <strong id="totalCosto"></strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="mt-4">
+                        </div>                    
                     
-                    <h3 class="my-4">Forma de pago</h3>                    
-                    <span id="paymentMethod">No ha seleccionado ninguna forma de pago. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">Seleccione una opción.</a></span>   
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="paymentModalLabel">Forma de Pago</h5>
-                                    
+                        <hr class="mt-4">
+
+                        <div id="infoCost">
+                            <h3 class="my-4">Costos</h3>
+
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="my-2">Subtotal general</h5>
+                                    <div>
+                                        <span>USD</span>
+                                        <span id="subtotalCosto"></span>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    <form>
+                            </div>
+
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="my-2">Costo de envío</h5>
+                                    <div>
+                                        <span>USD</span>
+                                        <span id="costoEnvio"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="my-2">Total</h5>
+                                    <div>
+                                        <strong>USD</strong>
+                                        <strong id="totalCosto"></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="mt-4">
+                        
+                        <h3 class="my-4">Forma de pago</h3>                    
+                        <span id="paymentMethod">No ha seleccionado ninguna forma de pago. <a role="button" href="" data-bs-toggle="modal" data-bs-target="#paymentModal">Seleccione una opción.</a></span>
+                        <br class="my-2">
+                        <small class="text-danger" id="modalFeedback"></small>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="paymentModalLabel">Forma de Pago</h5>
+                                        
+                                    </div>
+                                    <div class="modal-body">                                        
                                         <div class="form-group">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onclick="creditCardSelected()">
-                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                <input class="form-check-input" type="radio" name="paymentMethodRadio" id="creditCardRadio" onclick="creditCardSelected()" required>
+                                                <label class="form-check-label" for="creditCardRadio">
                                                     Tarjeta de crédito
                                                 </label>
-                                            </div> 
-                                        <hr>
-                                        
+                                            </div>
+
+                                            <hr>
+                                            
+                                            <div class="row">
+                                                <div class="form-group col-sm-6 col-md-6 ">
+                                                    <label for="cardNumber">Número de tarjeta</label>
+                                                    <input type="text" inputmode="numeric" id="cardNumber" class="form-control mb-3 creditCard" maxlength="19" pattern="[0-9]{12,19}" disabled required oninput="onlyDigits(this)">
+                                                    <div class="invalid-feedback">
+                                                        Ingresa un número de tarjeta válido
+                                                    </div>
+                                                </div>
+                                
+                                                <div class="form-group col-sm-4 col-md-4 ">
+                                                    <label for="securityCode">Código de seg.</label>
+                                                    <input type="text" inputmode="numeric" id="securityCode" class="form-control mb-3 creditCard" maxlength="3" pattern="[0-9]{3}" disabled required oninput="onlyDigits(this)">
+                                                    <div class="invalid-feedback">
+                                                        Ingresa un código de seguridad válido
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
-                                        <div class="form-group col-sm-6 col-md-6 ">
-                                            <label for="cardNumber">Número de tarjeta</label>
-                                            <input type="text" id="cardNumber" class="form-control mb-3" disabled>
+                                            <div class="form-group col-sm-6 col-md-6 ">
+                                                <label for="expirationDate">Vencimiento (MM/AA)</label>
+                                                <input type="text" inputmode="numeric" id="expirationDate" class="form-control mb-3 creditCard" pattern="^(0[1-9]|1[0-2])\/[0-9]{2}$" maxlength="5" disabled oninput="formatDate(this)">
+                                                <div class="invalid-feedback">
+                                                    Ingresa una fecha de vencimiento válida
+                                                </div>
+                                            </div>
                                         </div>
-                            
-                                        <div class="form-group col-sm-4 col-md-4 ">
-                                            <label for="securityCode">Código de seg.</label>
-                                            <input type="text" id="securityCode" class="form-control mb-3" disabled>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-6 col-md-6 ">
-                                            <label for="expirationDate">Vencimiento (MM/AA)</label>
-                                            <input type="text" id="expirationDate" class="form-control mb-3" disabled>
-                                        </div>
-                                        </div>
+
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onclick="wireTransferSelected()">
-                                            <label class="form-check-label" for="flexRadioDefault2">                                            
+                                            <input class="form-check-input" type="radio" name="paymentMethodRadio" id="wireTransferRadio" onclick="wireTransferSelected()" required>
+                                            <label class="form-check-label" for="wireTransferRadio">                                            
                                                 Transferencia bancaria
                                             </label>
                                         </div>
+
                                         <hr>
+
                                         <div class="row">
-                                        <div class="form-group col-sm-6 col-md-6">
-                                            <label for="accountNumber">Número de cuenta</label>
-                                            <input type="text" id="accountNumber" class="form-control" disabled>
-                                        </div>
-                                        </div>
-                                        
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                                            <div class="form-group col-sm-6 col-md-6">
+                                                <label for="accountNumber">Número de cuenta</label>
+                                                <input type="text" id="accountNumber" class="form-control" maxlength="16" pattern="[0-9]{16}" disabled required oninput="onlyDigits(this)">
+                                                <div class="invalid-feedback">
+                                                    Ingresa un número de cuenta válido
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+
+                                    <div class="modal-footer">                                    
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    `;
+                        </div>                        
+                        
+                        <input type="submit" class="w-100 btn btn-primary btn-lg mt-5" value="Finalizar compra" />
+                    </form>
+                `;
 
                 displayCosts();
+
+                const expirationDate = document.getElementById("expirationDate");
+                const accountNumber = document.getElementById("accountNumber");
+                const purchaseForm = document.getElementById("purchaseForm");
+                const creditCardRadio = document.getElementById("creditCardRadio");
+                const wireTransferRadio = document.getElementById("wireTransferRadio");
+                const modalFeedback = document.getElementById("modalFeedback"); // Apartado debajo de "No ha seleccionado ninguna forma de pago. Seleccione una opción" (por ejemplo), el cual a su vez esta debajo del subtitulo "Forma de pago". Aqui se escribe un mensaje que engloba los problemas de validacion dentro del cuerpo del modal.
+                const paymentOptions = Array.from(document.getElementsByName('paymentMethodRadio'));
+                const creditCard = Array.from(document.getElementsByClassName('creditCard'));
+
+                function allGood() { // Devuelve true si todos los datos de la tarjeta de credito son correctos. Si no, devuelve false.
+                    return document.getElementById("cardNumber").checkValidity() && document.getElementById("securityCode").checkValidity() && expirationDate.classList.contains('is-valid');
+                }
+
+                purchaseForm.addEventListener("submit", (e) => {
+                    e.preventDefault(); // Evita que se recargue la pagina.
+                    paymentOptions.forEach(element => element.removeEventListener('click', removeModalFeedback));
+                    if (!purchaseForm.checkValidity()) {
+                        Array.from(document.getElementsByClassName('deliveryAddress')).forEach(element => validate(element));
+                        if (!(creditCardRadio.checked || wireTransferRadio.checked)) {
+                            modalFeedback.textContent = 'Debe seleccionar una forma de pago';
+                            paymentOptions.forEach(element => element.addEventListener('click', removeModalFeedback));
+                        } else if (creditCardRadio.checked) {
+                            creditCard.forEach(element => validate(element));
+                            if (expirationDate.checkValidity() && isExpired(expirationDate.value)) // La validacion de que este expirada se hace aparte porque no es posible incluir dicha restriccion en el input mismo.
+                                expirationDate.classList.replace('is-valid', 'is-invalid');
+                            expirationDate.addEventListener('input', () => {
+                                if (expirationDate.checkValidity() && isExpired(expirationDate.value))
+                                    expirationDate.classList.replace('is-valid', 'is-invalid');
+                            });
+                            if (!allGood()) {
+                                modalFeedback.textContent = 'Ingresa valores válidos';
+                                wireTransferRadio.addEventListener('click', removeModalFeedback);
+                            }
+                            creditCard.forEach(element => element.addEventListener('input', () => {
+                                if (allGood())
+                                    removeModalFeedback();
+                                else
+                                    modalFeedback.textContent = 'Ingresa valores válidos';
+                            }));
+                        } else if (wireTransferRadio.checked) {
+                            validate(accountNumber);
+                            if (!accountNumber.checkValidity()) {
+                                modalFeedback.textContent = 'Ingresa un número de cuenta válido';
+                                creditCardRadio.addEventListener('click', removeModalFeedback);
+                            }
+                            accountNumber.addEventListener('input', () => {
+                                if (accountNumber.checkValidity())
+                                    removeModalFeedback();
+                                else
+                                    modalFeedback.textContent = 'Ingresa un número de cuenta válido';
+                            })
+                        }
+                    } else
+                        mostrarAlerta();
+                });
             }
         })
+
         .catch(error => console.error('Error: ', error));
 }
