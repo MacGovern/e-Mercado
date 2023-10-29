@@ -184,7 +184,7 @@ else {
         }
     }
 
-    function validate(element) {
+    function validate(element) { // Si el elemento es valido, se le pone un tick verde (Bootstrap), si no, se visualiza un mensaje de error debajo del input (Bootstrap).
         if (!element.checkValidity()) {
             element.classList.add("is-invalid");
             element.classList.remove("is-valid");
@@ -231,7 +231,7 @@ else {
     }
 
     function formatDate(element) {
-        const cleanedValue = element.value.replace(/[^0-9/]/g, '');
+        const cleanedValue = element.value.replace(/[^0-9/]/g, ''); // Todo lo que no sea un digito, lo elimina (lo remplaza con un "vacio").
 
         if (cleanedValue.length > 2 && cleanedValue.charAt(2) !== '/') {
             element.value = cleanedValue.substring(0, 2) + '/' + cleanedValue.substring(2);
@@ -241,15 +241,15 @@ else {
     }
 
     function onlyDigits(element) {
-        element.value = element.value.replace(/[^0-9]/g, '');
+        element.value = element.value.replace(/[^0-9]/g, ''); // Todo lo que no sea un digito, lo elimina (lo remplaza con un "vacio").
     }
 
-    function isExpired(userInput) {
+    function isExpired(userInput) { // userInput tiene un formato MM/AA
         const inputParts = userInput.split('/');
-        return new Date(2000 + parseInt(inputParts[1]), parseInt(inputParts[0]) - 1) < new Date();
+        return new Date(2000 + parseInt(inputParts[1]), parseInt(inputParts[0]) - 1) < new Date(); // A inputParts[0], el cual corresponde al mes, se le resta 1 porque en el objeto Date, enero se corresponde con un 0, no con un 1, por lo que va del 0 al 11.
     }
 
-    function mostrarAlerta() {
+    function mostrarAlerta() { // Muestra una alerta que indica que la compra se realizo con exito.
         const alerta = document.getElementById('purchaseAlert');
         alerta.classList.replace('d-none', 'd-block');
         localStorage.removeItem('cart');
@@ -521,16 +521,16 @@ else {
                 const purchaseForm = document.getElementById("purchaseForm");
                 const creditCardRadio = document.getElementById("creditCardRadio");
                 const wireTransferRadio = document.getElementById("wireTransferRadio");
-                const modalFeedback = document.getElementById("modalFeedback");
+                const modalFeedback = document.getElementById("modalFeedback"); // Apartado debajo de "No ha seleccionado ninguna forma de pago. Seleccione una opción" (por ejemplo), el cual a su vez esta debajo del subtitulo "Forma de pago". Aqui se escribe un mensaje que engloba los problemas de validacion dentro del cuerpo del modal.
                 const paymentOptions = Array.from(document.getElementsByName('paymentMethodRadio'));
                 const creditCard = Array.from(document.getElementsByClassName('creditCard'));
 
-                function allGood() {
+                function allGood() { // Devuelve true si todos los datos de la tarjeta de credito son correctos. Si no, devuelve false.
                     return document.getElementById("cardNumber").checkValidity() && document.getElementById("securityCode").checkValidity() && expirationDate.classList.contains('is-valid');
                 }
 
                 purchaseForm.addEventListener("submit", (e) => {
-                    e.preventDefault();
+                    e.preventDefault(); // Evita que se recargue la pagina.
                     paymentOptions.forEach(element => element.removeEventListener('click', removeModalFeedback));
                     if (!purchaseForm.checkValidity()) {
                         Array.from(document.getElementsByClassName('deliveryAddress')).forEach(element => validate(element));
@@ -539,7 +539,7 @@ else {
                             paymentOptions.forEach(element => element.addEventListener('click', removeModalFeedback));
                         } else if (creditCardRadio.checked) {
                             creditCard.forEach(element => validate(element));
-                            if (expirationDate.checkValidity() && isExpired(expirationDate.value))
+                            if (expirationDate.checkValidity() && isExpired(expirationDate.value)) // La validacion de que este expirada se hace aparte porque no es posible incluir dicha restriccion en el input mismo.
                                 expirationDate.classList.replace('is-valid', 'is-invalid');
                             expirationDate.addEventListener('input', () => {
                                 if (expirationDate.checkValidity() && isExpired(expirationDate.value))
