@@ -54,40 +54,40 @@ else
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label for="Name">Primer Nombre*</label>
-                    <input type="text" class="form-control" minlength="3" required>
+                    <input type="text" class="form-control"  required>
                 </div>
 
                 <div class="form-group mb-3">
                     <label for="lastName">Primer Apellido*</label>
-                    <input type="text" class="form-control" minlength="3" required>
+                    <input type="text" class="form-control"  required>
                 </div>
 
                 <div class="form-group mb-5">
-                    <label for="exampleInputEmail1" class="form-label">E-mail </label>
-                    <input type="email" class="form-control">
+                    <label for="exampleInputEmail1" class="form-label">E-mail* </label>
+                    <input type="email" class="form-control" required>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label for="secondName">Segundo Nombre</label>
-                    <input type="text" class="form-control" minlength="3">
+                    <input type="text" class="form-control" >
                 </div>
 
                 <div class="form-group mb-3">
                     <label for="secondlastName">Segundo Apellido</label>
-                    <input type="text" class="form-control" minlength="3">
+                    <input type="text" class="form-control" >
                 </div>
 
                 <div class="form-group mb-5">
-                    <label for="telephone">Teléfono de Contacto*</label>
-                    <input type="text" class="form-control" maxlength="9" pattern="[0-9]{9}" required>
+                    <label for="telephone">Teléfono de Contacto</label>
+                    <input type="text" class="form-control" maxlength="9" >
                 </div>
             </div>
         </div>
 
         <hr>
 
-        <button type="button" class="btn btn-primary mb-3" data-bs-dismiss="modal">Guardar cambios</button>
+        <button type="button" class="btn btn-primary mb-3" ">Guardar cambios</button>
     </form>
 `;
