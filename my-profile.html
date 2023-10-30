@@ -51,13 +51,49 @@
       </div>
     </div>
   </nav>
-  <main>
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+
+  <main class="container">
+    <h2 class="py-4">Perfil</h2>
+    <hr>
+    <form>
+      <div class="row">
+        <div class="col-12 col-sm-6">
+          <div class="mb-3">
+            <label for="name" class="form-label">Primer nombre*</label>
+            <input type="text" class="form-control" id="name" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Primer apellido*</label>
+            <input type="text" class="form-control" id="lastName" required>
+          </div>
+
+          <div class="mb-3 mb-sm-0">
+            <label for="readOnlyEmail" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="readOnlyEmail" aria-label="readonly input" readonly>
+          </div>          
+        </div>
+
+        <div class="col col-sm-6">
+          <div class="mb-3">
+            <label for="secondName" class="form-label">Segundo nombre</label>
+            <input type="text" class="form-control" id="secondName">
+          </div>
+
+          <div class="mb-3">
+            <label for="secondLastName" class="form-label">Segundo apellido</label>
+            <input type="text" class="form-control" id="secondLastName">
+          </div>
+
+          <label for="contactNumber" class="form-label">Teléfono de contacto</label>
+          <input type="text" class="form-control" id="contactNumber">
+        </div>
       </div>
-    </div>
+
+      <input type="submit" class="btn btn-primary my-5" value="Guardar cambios">
+    </form>
   </main>
+
   <footer class="text-muted container">
     <div class="row d-flex justify-content-between">
       <div class="col-12 col-sm-auto text-center mb-3">
