@@ -199,6 +199,10 @@ body, .card, .modal-content {
   color: var(--bs-dark);
 }
 
+#readOnlyEmail {
+  background-color: white;
+}
+
 .jumbotron,
 .card-body,
 .container,
