@@ -22,6 +22,9 @@
       .rowImage {
         flex: 0 0 126px;
       }
+      #cartTable {
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
@@ -53,7 +56,9 @@
 
   <h2 class="text-center p-4">Carrito de Compras</h2>
   <main class="container pb-5" id="cartContent">
-    <!-- Contenido del carrito -->
+    <div id="cartTable">
+      <!-- Contenido del carrito -->
+    </div>
   </main>
 
   <div id="purchaseAlert" class="alert alert-success p-4 d-none">
