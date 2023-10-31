@@ -46,6 +46,7 @@ else {
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartContent = document.getElementById('cartContent');
+    const cartTable = document.getElementById('cartTable');
     let originalValue;
 
     async function setConversionRate() {
@@ -164,13 +165,13 @@ else {
 
             //Si el hr que esta debajo del producto que se va a eliminar, no es el ultimo, se elimina
             if (!nextElement.classList.contains('mb-4'))
-                cartContent.removeChild(nextElement);
+                cartTable.removeChild(nextElement);
             //Si no, se elimina el hr que esta encima
             else
-                cartContent.removeChild(element.previousElementSibling);
+                cartTable.removeChild(element.previousElementSibling);
 
             //Elimina el producto del carrito visual
-            cartContent.removeChild(element);
+            cartTable.removeChild(element);
 
             displayCosts();
         }
@@ -252,7 +253,7 @@ else {
     }
 
     if (!emptyCart()) {
-        cartContent.innerHTML = `
+        cartTable.innerHTML = `
                     <h3 class="my-4">Artículos a Comprar</h3>
                     <div class="row d-flex flex-nowrap">
                         <div class="col col-lg-2 me-lg-3 me-xl-4 me-xxl-5" id="colNoImage">
@@ -279,7 +280,7 @@ else {
                 `;
 
         cart.forEach((article, index) => {
-            cartContent.innerHTML += `                        
+            cartTable.innerHTML += `                        
                         <div class="row d-flex align-items-center flex-nowrap" id="${index}">
                             <div class="col col-lg-2 me-lg-3 me-xl-4 me-xxl-5" id="colImage">
                                 <img src="${article.image}" alt="Producto" class="img-thumbnail">
@@ -303,9 +304,9 @@ else {
                     `;
 
             if (index !== cart.length - 1)
-                cartContent.innerHTML += `<hr>`;
+                cartTable.innerHTML += `<hr>`;
             else
-                cartContent.innerHTML += '<hr style="opacity: 1;" class="mb-4">';
+                cartTable.innerHTML += '<hr style="opacity: 1;" class="mb-4">';
         });
 
         cartContent.innerHTML += `
