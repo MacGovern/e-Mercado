@@ -55,44 +55,61 @@
   <main class="container">
     <h2 class="py-4">Perfil</h2>
     <hr>
-    <form>
+    <form id="profileForm" novalidate>
       <div class="row">
-        <div class="col-12 col-sm-6">
-          <div class="mb-3">
-            <label for="name" class="form-label">Primer nombre*</label>
-            <input type="text" class="form-control" id="name" required>
+        <div class="mb-3 mb-sm-0 col-sm-6">
+          <label for="name" class="form-label">Primer nombre*</label>
+          <input type="text" class="form-control easy-validation" id="name" required>
+          <div class="invalid-feedback">
+            Ingresa un nombre
           </div>
-
-          <div class="mb-3">
-            <label for="lastName" class="form-label">Primer apellido*</label>
-            <input type="text" class="form-control" id="lastName" required>
-          </div>
-
-          <div class="mb-3 mb-sm-0">
-            <label for="readOnlyEmail" class="form-label">E-mail</label>
-            <input type="email" class="form-control" id="readOnlyEmail" aria-label="readonly input" readonly>
-          </div>          
         </div>
 
-        <div class="col col-sm-6">
-          <div class="mb-3">
-            <label for="secondName" class="form-label">Segundo nombre</label>
-            <input type="text" class="form-control" id="secondName">
+        <div class="col-sm-6">
+          <label for="lastName" class="form-label">Primer apellido*</label>
+          <input type="text" class="form-control easy-validation" id="lastName" required>
+          <div class="invalid-feedback">
+            Ingresa un apellido
           </div>
-
-          <div class="mb-3">
-            <label for="secondLastName" class="form-label">Segundo apellido</label>
-            <input type="text" class="form-control" id="secondLastName">
-          </div>
-
-          <label for="contactNumber" class="form-label">Teléfono de contacto</label>
-          <input type="text" class="form-control" id="contactNumber">
         </div>
       </div>
 
+      <div class="row my-3">
+        <div class="mb-3 mb-sm-0 col-sm-6">
+          <label for="secondName" class="form-label">Segundo nombre</label>
+          <input type="text" class="form-control easy-validation" id="secondName">
+        </div>
+
+        <div class="col-sm-6">
+          <label for="secondLastName" class="form-label">Segundo apellido</label>
+          <input type="text" class="form-control easy-validation" id="secondLastName">
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="mb-3 mb-sm-0 col-sm-6">
+          <label for="readOnlyEmail" class="form-label">E-mail</label>
+          <input type="email" class="form-control" id="readOnlyEmail" aria-label="readonly input" readonly>
+        </div>
+
+        <div class="col-sm-6">
+          <label for="contactNumber" class="form-label">Teléfono de contacto</label>
+          <input type="tel" class="form-control" id="contactNumber" placeholder="Ejemplo: +598 0800 2342" maxlength="20" oninput="formatContactNumber(this)">
+          <div class="invalid-feedback">
+            Ingresa un número de teléfono válido (con prefijo internacional)
+          </div>
+        </div>
+      </div>
+    
       <input type="submit" class="btn btn-primary my-5" value="Guardar cambios">
     </form>
   </main>
+
+  <!-- Alerta -->
+  <div id="changesSavedAlert" class="alert alert-success p-4 d-none w-auto text-center">
+    <span>¡Tus cambios se han guardado con éxito!</span>
+  </div>
 
   <footer class="text-muted container">
     <div class="row d-flex justify-content-between">
@@ -109,6 +126,7 @@
   </footer>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.49/libphonenumber-js.min.js"></script>
   <script src="js/my-profile.js"></script>
 </body>
 
