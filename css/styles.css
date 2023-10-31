@@ -184,7 +184,7 @@ body {
   /* transition: .4s; */
 }
 
-body, .card {
+body, .card, .modal-content {
   background-color: var(--bs-body-bg);
   /* transition: .4s; */
 }
@@ -192,14 +192,15 @@ body, .card {
 .list-group-item {
   color: var(--bs-light-text-emphasis);
   transition: .2s;
-}
-
-.list-group-item-action {
-  background-color: var(--bs-light-border-subtle);
+  background-color:  var(--bs-light-border-subtle);
 }
 
 .darkText, .form-floating {
   color: var(--bs-dark);
+}
+
+#readOnlyEmail {
+  background-color: white;
 }
 
 .jumbotron,

@@ -51,13 +51,58 @@
       </div>
     </div>
   </nav>
-  <main>
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+
+  <main class="container">
+    <h2 class="py-4">Perfil</h2>
+    <hr>
+    <form id="profileForm" novalidate>
+      <div class="row mt-2">
+        <div class="mb-3 mb-sm-0 col-12 col-sm-6">
+          <label for="name" class="form-label">Primer nombre*</label>
+          <input type="text" class="form-control profileInfo" id="name" required>
+          <div class="invalid-feedback">
+            Ingresa un nombre.
+          </div>
+        </div>
+
+        <div class="mb-3 mb-sm-0 col-12 col-sm-6">
+          <label for="lastName" class="form-label">Primer apellido*</label>
+          <input type="text" class="form-control profileInfo" id="lastName" required>
+          <div class="invalid-feedback">
+            Ingresa un apellido.
+          </div>
+        </div>
       </div>
-    </div>
+
+      <div class="row mt-2">
+        <div class="mb-3 mb-sm-0 col-12 col-sm-6">
+          <label for="secondName" class="form-label">Segundo nombre</label>
+          <input type="text" class="form-control" id="secondName">
+        </div>
+
+        <div class="mb-3 mb-sm-0 col-12 col-sm-6">
+          <label for="secondLastName" class="form-label">Segundo apellido</label>
+          <input type="text" class="form-control" id="secondLastName">
+        </div>
+      </div>
+
+
+      <div class="row mt-2">
+        <div class="mb-3 mb-sm-0 col-12 col-sm-6">
+          <label for="readOnlyEmail" class="form-label">E-mail</label>
+          <input type="email" class="form-control" id="readOnlyEmail" aria-label="readonly input" readonly>
+        </div>
+
+        <div class="mb-3 mb-sm-0 col-12 col-sm-6">
+          <label for="contactNumber" class="form-label">Teléfono de contacto</label>
+          <input type="text" class="form-control" id="contactNumber" oninput="formatContactNumber(this)">
+        </div>
+      </div>
+
+      <input type="submit" class="btn btn-primary my-5" value="Guardar cambios">
+    </form>
   </main>
+
   <footer class="text-muted container">
     <div class="row d-flex justify-content-between">
       <div class="col-12 col-sm-auto text-center mb-3">
