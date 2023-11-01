@@ -165,13 +165,16 @@ else {
 
             //Si el hr que esta debajo del producto que se va a eliminar, no es el ultimo, se elimina
             if (!nextElement.classList.contains('mb-4'))
-                cartTable.removeChild(nextElement);
+                //cartTable.removeChild(nextElement);
+                element.parentNode.removeChild(nextElement);
             //Si no, se elimina el hr que esta encima
             else
-                cartTable.removeChild(element.previousElementSibling);
+                //cartTable.removeChild(element.previousElementSibling);
+                element.parentNode.removeChild(element.previousElementSibling);
 
             //Elimina el producto del carrito visual
-            cartTable.removeChild(element);
+            //cartTable.removeChild(element);
+            element.parentNode.removeChild(element);
 
             displayCosts();
         }
