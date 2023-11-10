@@ -11,7 +11,7 @@
   <link href="css/styles.css" rel="stylesheet">
 
   <style>
-    @media (max-width: 575px) {
+    @media (max-width: 767px) {
 
       #colNoImage,
       #colImage {
@@ -20,7 +20,10 @@
 
       .rowNoImage,
       .rowImage {
-        flex: 0 0 126px;
+        flex: 0 0 147px;
+      }
+      #cartTable {
+        overflow-x: auto;
       }
     }
   </style>
@@ -53,7 +56,9 @@
 
   <h2 class="text-center p-4">Carrito de Compras</h2>
   <main class="container pb-5" id="cartContent">
-    <!-- Contenido del carrito -->
+    <div id="cartTable">
+      <!-- Contenido del carrito -->
+    </div>
   </main>
 
   <!-- Alerta -->
