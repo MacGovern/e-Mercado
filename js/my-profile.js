@@ -94,6 +94,29 @@ else {
 
     const profileForm = document.getElementById("profileForm");
     const contactNumber = document.getElementById("contactNumber");
+    const profilePicture = document.getElementById('profilePicture');
+    const fileInput = document.getElementById('fileInput');
+    let profilePictureURL = '';
+    const profileData = localStorage.getItem(email);
+
+    if (profileData) {
+        const profileDataParsed = JSON.parse(profileData);
+        if (profileDataParsed.profilePicture !== '') {
+            profilePictureURL = profileDataParsed.profilePicture;
+            profilePicture.src = profilePictureURL;
+        }
+    };
+
+    profilePicture.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', () => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(fileInput.files[0]);
+        fileReader.addEventListener('load', () => {
+            profilePictureURL = fileReader.result;
+            profilePicture.src = profilePictureURL;
+        });
+    });
 
     profileForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -104,13 +127,14 @@ else {
                 lastName: document.getElementById("lastName").value,
                 secondName: document.getElementById("secondName").value,
                 secondLastName: document.getElementById("secondLastName").value,
-                contactNumber: contactNumber.value
+                contactNumber: contactNumber.value,
+                profilePicture: profilePictureURL
             }));
             mostrarAlerta();
         } else {
             Array.from(document.getElementsByClassName('easy-validation')).forEach(element => validate(element));
             validateContactNumber(contactNumber);
-            contactNumber.setAttribute('oninput', 'formatContactNumber(this); validateContactNumber(this)');            
+            contactNumber.setAttribute('oninput', 'formatContactNumber(this); validateContactNumber(this)');
         }
     });
 }
