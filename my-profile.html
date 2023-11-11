@@ -53,15 +53,10 @@
   </nav>
 
   <main class="container">
-    <div class="row my-3">
-      <div class="d-flex justify-content-between align-items-center position-relative">
-          <h2 class="py-4">Perfil</h2>
-          <div class="profile-picture-container">
-          <input type="file" id="fileInput" accept="image/*" class="d-none">
-              <img src="img/img_perfil.png" alt="Profile picture" id="profilePicture" class="cursor-active">
-            </div>
-      </div>
-  </div>
+    <div class="d-flex justify-content-between align-items-center my-3">
+      <h2 class="m-0">Perfil</h2>
+      <img src="img/img_perfil.png" alt="Profile picture" id="profilePicture" class="cursor-active img-thumbnail">
+    </div>
     <hr>
     <form id="profileForm" novalidate>
       <div class="row">
@@ -103,16 +98,18 @@
 
         <div class="col-sm-6">
           <label for="contactNumber" class="form-label">Teléfono de contacto</label>
-          <input type="tel" class="form-control" id="contactNumber" placeholder="Ejemplo: +598 0800 2342" maxlength="20" oninput="formatContactNumber(this)">
+          <input type="tel" class="form-control" id="contactNumber" placeholder="Ejemplo: +598 0800 2342" maxlength="20"
+            oninput="formatContactNumber(this)">
           <div class="invalid-feedback">
             Ingresa un número de teléfono válido (con prefijo internacional)
           </div>
         </div>
       </div>
-    
+
       <input type="submit" class="btn btn-primary my-5" value="Guardar cambios">
     </form>
 
+    <input type="file" id="fileInput" accept="image/*" class="d-none">
   </main>
 
   <!-- Alerta -->

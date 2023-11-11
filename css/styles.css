@@ -184,7 +184,9 @@ body {
   /* transition: .4s; */
 }
 
-body, .card, .modal-content {
+body,
+.card,
+.modal-content {
   background-color: var(--bs-body-bg);
   /* transition: .4s; */
 }
@@ -192,10 +194,11 @@ body, .card, .modal-content {
 .list-group-item {
   color: var(--bs-light-text-emphasis);
   transition: .2s;
-  background-color:  var(--bs-light-border-subtle);
+  background-color: var(--bs-light-border-subtle);
 }
 
-.darkText, .form-floating {
+.darkText,
+.form-floating {
   color: var(--bs-dark);
 }
 
@@ -398,8 +401,9 @@ a.custom-card:hover {
   width: 60%;
 }
 
-
 #profilePicture {
-  max-width: 100px;
-  min-height: 25px;
+  width: 100px;
+  height: 100px;
+  image-rendering: auto;
+  object-fit: cover;
 }
