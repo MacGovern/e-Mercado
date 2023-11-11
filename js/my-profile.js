@@ -92,6 +92,8 @@ else {
         });
     };
 
+    document.getElementById('readOnlyEmail').value = email;
+
     const profileForm = document.getElementById("profileForm");
     const contactNumber = document.getElementById("contactNumber");
     const profilePicture = document.getElementById('profilePicture');
