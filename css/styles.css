@@ -397,3 +397,9 @@ a.custom-card:hover {
 #carousel {
   width: 60%;
 }
+
+
+#profilePicture {
+  max-width: 100px;
+  min-height: 25px;
+}

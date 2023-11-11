@@ -53,7 +53,15 @@
   </nav>
 
   <main class="container">
-    <h2 class="py-4">Perfil</h2>
+    <div class="row my-3">
+      <div class="d-flex justify-content-between align-items-center position-relative">
+          <h2 class="py-4">Perfil</h2>
+          <div class="profile-picture-container">
+          <input type="file" id="fileInput" accept="image/*" class="d-none">
+              <img src="img/img_perfil.png" alt="Profile picture" id="profilePicture" class="cursor-active">
+            </div>
+      </div>
+  </div>
     <hr>
     <form id="profileForm" novalidate>
       <div class="row">
@@ -105,8 +113,6 @@
       <input type="submit" class="btn btn-primary my-5" value="Guardar cambios">
     </form>
 
-    <input type="file" id="fileInput" accept="image/*" class="d-none">
-    <img src="img/img_perfil.png" alt="Profile picture" id="profilePicture" class="cursor-active">
   </main>
 
   <!-- Alerta -->
