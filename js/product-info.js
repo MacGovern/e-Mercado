@@ -119,6 +119,18 @@ else {
             });
         }
 
+        function toLocalTime(dateTime) {
+            return (new Date(dateTime + 'Z')).toLocaleString(undefined, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).replace(/[/]/g, '-').replace(',', '');
+        }
+
         function showComment(comment) { // Función para mostrar un comentario del producto seleccionado.
             let stars = "";
             for (let i = 1; i <= comment.score; i++)
@@ -127,7 +139,7 @@ else {
                 stars += `<i class="far fa-star"></i>`; // Estrella unchecked.
             listaComentarios.innerHTML += `
                     <div class="list-group-item list-group-item-action">
-                        <p class="mb-1"><strong>${comment.user}</strong> - ${comment.dateTime} - ${stars}</p>
+                        <p class="mb-1"><strong>${comment.user}</strong> - ${toLocalTime(comment.dateTime)} - ${stars}</p>
                         <p class="mb-1">${comment.description}</p>
                     </div>
             `;
@@ -157,7 +169,7 @@ else {
                     image: product.images[0]
                 });
 
-            
+
             localStorage.setItem('cart', JSON.stringify(cart));
             alert('¡Artículo agregado al carrito de compras!');
         }
