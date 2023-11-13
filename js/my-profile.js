@@ -95,6 +95,10 @@ else {
     document.getElementById('readOnlyEmail').value = email;
 
     const profileForm = document.getElementById("profileForm");
+    const name = document.getElementById("name");
+    const lastName = document.getElementById("lastName");
+    const secondName = document.getElementById("secondName");
+    const secondLastName = document.getElementById("secondLastName");
     const contactNumber = document.getElementById("contactNumber");
     const profilePicture = document.getElementById('profilePicture');
     const fileInput = document.getElementById('fileInput');
@@ -107,6 +111,11 @@ else {
             profilePictureURL = profileDataParsed.profilePicture;
             profilePicture.src = profilePictureURL;
         }
+        name.value = profileDataParsed.name;
+        lastName.value = profileDataParsed.lastName;
+        secondName.value = profileDataParsed.secondName;
+        secondLastName.value = profileDataParsed.secondLastName;
+        contactNumber.value = profileDataParsed.contactNumber;
     };
 
     profilePicture.addEventListener('click', () => fileInput.click());
@@ -125,10 +134,10 @@ else {
 
         if (profileForm.checkValidity() && (contactNumber.value === "" || libphonenumber.isValidNumber(libphonenumber.parse(contactNumber.value)))) {
             localStorage.setItem(email, JSON.stringify({
-                name: document.getElementById("name").value,
-                lastName: document.getElementById("lastName").value,
-                secondName: document.getElementById("secondName").value,
-                secondLastName: document.getElementById("secondLastName").value,
+                name: name.value,
+                lastName: lastName.value,
+                secondName: secondName.value,
+                secondLastName: secondLastName.value,
                 contactNumber: contactNumber.value,
                 profilePicture: profilePictureURL
             }));
